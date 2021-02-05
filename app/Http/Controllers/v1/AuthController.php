@@ -26,7 +26,7 @@ class AuthController extends Controller
             ], 401);
 
         $user = $request->user();
-        $tokenResult = $user->createToken('Personal Access Token');
+        $tokenResult = $user->createToken('personal');
 
         $token = $tokenResult->token;
         if ($request->remember_me)
@@ -40,18 +40,17 @@ class AuthController extends Controller
         ]);
     }
 
-    public function register()
+    public function logout(Request $request)
     {
+        $request->user()->token()->revoke();
 
+        return response()->json([
+            'message' => 'Successfully logged out'
+        ]);
     }
 
-    public function logout()
+    public function getAuthUser(Request $request)
     {
-
-    }
-
-    public function getAuthUser()
-    {
-
+        return response()->json($request->user());
     }
 }
