@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1;
 
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,7 @@ class AuthController extends Controller
             ], 401);
 
         $user = $request->user();
-        $tokenResult = $user->createToken('personal');
+        $tokenResult = $user->createToken('Personal access client');
 
         $token = $tokenResult->token;
         if ($request->remember_me)
@@ -38,6 +39,31 @@ class AuthController extends Controller
             'token_type' => 'Bearer',
             'expires_at' => Carbon::parse($token->expires_at)->toDateTimeString()
         ]);
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|string|email|unique:users',
+            'password' => 'required|string',
+            'document_type' => 'required|string|in:cc,ce,tc,pp',
+            'document_number' => 'required|string',
+            'is_administrator' => 'boolean',
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'document_type' => $request->document_type,
+            'document_number' => $request->document_number,
+            'is_administrator' => $request->is_administrator
+        ]);
+
+        return response()->json([
+            'message' => 'Successfully created user!'
+        ], 201);
     }
 
     public function logout(Request $request)
