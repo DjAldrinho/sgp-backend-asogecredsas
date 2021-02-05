@@ -3,13 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable
+class Client extends Model
 {
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -19,10 +17,11 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
+        'phone',
         'document_type',
         'document_number',
-        'email_verified_at'
+        'sign_url',
+        'client_type'
     ];
 
     /**
@@ -31,20 +30,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password',
-        'remember_token',
         'created_at',
         'updated_at',
         'deleted_at'
     ];
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-
 }

@@ -5,15 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Person extends Model
+class Lawyer extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'name',
-        'surname',
+        'email',
         'phone',
-        'user_id'
+        'document_type',
+        'document_number',
+        'professional_card_url'
     ];
 
     /**
@@ -26,11 +33,4 @@ class Person extends Model
         'updated_at',
         'deleted_at'
     ];
-
-    public function user()
-    {
-        return $this->hasOne(User::class);
-    }
-
-
 }
