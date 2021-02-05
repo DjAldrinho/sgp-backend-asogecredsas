@@ -22,7 +22,7 @@ class User extends Authenticatable
         'password',
         'document_type',
         'document_number',
-        'email_verified_at'
+        'is_administrator'
     ];
 
     /**
