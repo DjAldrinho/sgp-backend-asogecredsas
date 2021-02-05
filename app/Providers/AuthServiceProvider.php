@@ -33,6 +33,6 @@ class AuthServiceProvider extends ServiceProvider
 
         Passport::personalAccessTokensExpireIn(now()->addMonths(6));
 
-        Passport::loadKeysFrom(__DIR__.'/../secrets/oauth');
+        Passport::loadKeysFrom('/secret-keys/oauth');
     }
 }
