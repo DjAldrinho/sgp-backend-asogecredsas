@@ -23,7 +23,6 @@ class CreateClientsTable extends Migration
             $table->string('sign_url')->nullable();
             $table->json('client_type')->nullable()->comment('Tipos de usuario');
             $table->softDeletes();
-            $table->rememberToken();
             $table->timestamps();
         });
     }
