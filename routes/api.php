@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\v1\AuthController;
 use App\Http\Controllers\v1\ClientController;
+use App\Http\Controllers\v1\LawyerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,6 +31,14 @@ Route::middleware('auth:api')->group(function () {
         Route::patch('update/{client}', [ClientController::class, 'update']);
         Route::post('create', [ClientController::class, 'create']);
         Route::delete('delete/{client}', [ClientController::class, 'destroy']);
+    });
+
+    Route::group(['prefix' => 'lawyers'], function () {
+        Route::get('all', [LawyerController::class, 'index']);
+        Route::get('info/{lawyer}', [LawyerController::class, 'show']);
+        Route::patch('update/{lawyer}', [LawyerController::class, 'update']);
+        Route::post('create', [LawyerController::class, 'create']);
+        Route::delete('delete/{lawyer}', [LawyerController::class, 'destroy']);
     });
 });
 

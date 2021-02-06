@@ -27,7 +27,7 @@ class LawyerFactory extends Factory
             'phone' => $this->faker->phoneNumber,
             'document_type' => $this->faker->randomElement(['cc', 'ce', 'tc', 'pp']),
             'document_number' => $this->faker->numberBetween(6, 12),
-            'professional_card_url' => $this->faker->imageUrl(300, 200)
+            'professional_card' => $this->faker->imageUrl(300, 200)
         ];
     }
 }

@@ -21,7 +21,7 @@ class Lawyer extends Model
         'phone',
         'document_type',
         'document_number',
-        'professional_card_url'
+        'professional_card'
     ];
 
     /**
@@ -30,8 +30,13 @@ class Lawyer extends Model
      * @var array
      */
     protected $hidden = [
-        'created_at',
-        'updated_at',
         'deleted_at'
     ];
+
+    protected $appends = ['professional_card_url'];
+
+    public function getProfessionalCardUrlAttribute()
+    {
+        return $this->professional_card ? asset('storage') . '/'. $this->professional_card : '';
+    }
 }
