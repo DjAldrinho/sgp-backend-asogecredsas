@@ -29,7 +29,9 @@ class ClientController extends Controller
 
             $types = explode(',', $request->types);
 
-            $clients = Client::whereJsonContains('client_type', $types)->paginate(50);
+            $clients = Client::whereJsonContains('client_type', $types)->paginate(2);
+
+            $clients->appends(['types' => $request->types]);
 
             return response()->json(['clients' => $clients]);
         } catch (\Exception $exception) {
