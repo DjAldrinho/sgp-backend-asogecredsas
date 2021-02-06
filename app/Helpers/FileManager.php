@@ -16,11 +16,16 @@ class FileManager
     public static function uploadPublicFiles($file, $path)
     {
         $i = 1;
+
         try {
-            $extension = $file->extension();
-            $fileName = (time() + $i) . '.' . $extension;
-            $file->move(public_path('storage/' . $path), $fileName);
-            return $path . '/' . $fileName;
+            if (isset($file)) {
+                $extension = $file->extension();
+                $fileName = (time() + $i) . '.' . $extension;
+                $file->move(public_path('storage/' . $path), $fileName);
+                return $path . '/' . $fileName;
+            }
+
+            return false;
         } catch (Exception $e) {
             return false;
         }

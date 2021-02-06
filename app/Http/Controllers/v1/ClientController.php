@@ -14,9 +14,27 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request)
+    public function index()
     {
         return response()->json(['clients' => Client::all()], 200);
+    }
+
+    public function getByType(Request $request)
+    {
+        $request->validate([
+            'types' => 'required|string'
+        ]);
+
+        try {
+
+            $types = explode(',', $request->types);
+
+            $clients = Client::whereJsonContains('client_type', $types)->get();
+
+            return response()->json(['clients' => $clients]);
+        } catch (\Exception $exception) {
+            return response(['message' => $exception->getMessage()], 409);
+        }
     }
 
     /**
@@ -28,9 +46,9 @@ class ClientController extends Controller
     public function create(Request $request)
     {
 
-        $validate = $request->validate([
+        $request->validate([
             'name' => 'required|string',
-            'email' => 'required|string|email|unique:users',
+            'email' => 'string|email',
             'phone' => 'required|string',
             'document_type' => 'required|string|in:cc,ce,tc,pp',
             'document_number' => 'required|string',
@@ -42,78 +60,79 @@ class ClientController extends Controller
 
             $client_type = explode(',', $request->client_type);
 
-            Client::create([
+            $client = Client::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'phone' => bcrypt($request->phone),
+                'phone' => $request->phone,
                 'document_type' => $request->document_type,
                 'document_number' => $request->document_number,
-                'sign_url' => FileManager::uploadPublicFiles($request->file('sign'), 'clients'),
+                'sign' => FileManager::uploadPublicFiles($request->file('sign'), 'clients'),
                 'client_type' => json_encode($client_type)
             ]);
 
-            return response()->json(['message' => 'Successfully created client!'], 201);
+            return response()->json(['message' => 'Successfully created client!', 'client' => $client], 201);
 
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
         }
-
-
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
      *
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param Client $client
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Client $client)
     {
-        //
+        return response()->json(['client' => $client], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Client $client
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Client $client)
     {
-        //
+
+        $request->validate([
+            'email' => 'string|email',
+            'phone' => 'required|string',
+            'client_type' => 'required|string'
+        ]);
+
+        try {
+            $client_type = explode(',', $request->client_type);
+            $client->email = $request->email;
+            $client->phone = $request->phone;
+            $client->client_type = json_encode($client_type);
+            $client->save();
+            $client->refresh();
+            return response()->json(['message' => 'Client Updated!', 'client' => $client], 200);
+
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage(), 409]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param Client $client
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy(Client $client)
     {
-        //
+        try {
+            $client->delete();
+            return response()->json(['message' => 'Client deleted!'], 200);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()]);
+        }
     }
 }

@@ -20,7 +20,7 @@ class CreateClientsTable extends Migration
             $table->string('name', 150)->comment('Nombre Completo');
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
-            $table->string('sign_url')->nullable();
+            $table->string('sign')->nullable();
             $table->json('client_type')->nullable()->comment('Tipos de usuario');
             $table->softDeletes();
             $table->timestamps();

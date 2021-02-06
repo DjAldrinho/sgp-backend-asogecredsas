@@ -55,18 +55,22 @@ class AuthController extends Controller
             'is_administrator' => 'boolean',
         ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'document_type' => $request->document_type,
-            'document_number' => $request->document_number,
-            'is_administrator' => $request->is_administrator
-        ]);
+        try {
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'document_type' => $request->document_type,
+                'document_number' => $request->document_number,
+                'is_administrator' => $request->is_administrator
+            ]);
 
-        return response()->json([
-            'message' => 'Successfully created user!'
-        ], 201);
+            return response()->json([
+                'message' => 'Successfully created user!'
+            ], 201);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()]);
+        }
     }
 
     public function logout(Request $request)

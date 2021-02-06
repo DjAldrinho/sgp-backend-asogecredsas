@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Client extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -20,8 +21,12 @@ class Client extends Model
         'phone',
         'document_type',
         'document_number',
-        'sign_url',
+        'sign',
         'client_type'
+    ];
+
+    protected $casts = [
+        'client_type' => 'object'
     ];
 
     /**
@@ -30,8 +35,13 @@ class Client extends Model
      * @var array
      */
     protected $hidden = [
-        'created_at',
-        'updated_at',
         'deleted_at'
     ];
+
+    protected $appends = ['sign_url'];
+
+    public function getSignUrlAttribute()
+    {
+        return $this->sign ? asset('storage') . '/'. $this->sign : '';
+    }
 }
