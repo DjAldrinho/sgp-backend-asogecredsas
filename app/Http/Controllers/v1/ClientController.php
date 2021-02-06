@@ -53,7 +53,7 @@ class ClientController extends Controller
             'email' => 'string|email',
             'phone' => 'required|string',
             'document_type' => 'required|string|in:cc,ce,tc,pp',
-            'document_number' => 'required|string',
+            'document_number' => 'required|string|unique:clients',
             'sign' => 'required|file',
             'client_type' => 'required|string',
         ]);
