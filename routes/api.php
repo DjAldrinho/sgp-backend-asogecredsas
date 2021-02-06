@@ -20,7 +20,8 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
     Route::get('logout', [AuthController::class, 'logout'])->middleware('auth:api');
-    Route::get('user', [AuthController::class, 'getAuthUser'])->middleware('auth:api');;
+    Route::get('user', [AuthController::class, 'getAuthUser'])->middleware('auth:api');
+    Route::patch('change-password', [AuthController::class, 'changePassword'])->middleware('auth:api');
 });
 
 Route::middleware('auth:api')->group(function () {
@@ -39,6 +40,10 @@ Route::middleware('auth:api')->group(function () {
         Route::patch('update/{lawyer}', [LawyerController::class, 'update']);
         Route::post('create', [LawyerController::class, 'create']);
         Route::delete('delete/{lawyer}', [LawyerController::class, 'destroy']);
+    });
+
+    Route::group(['prefix' => 'deposit-account'], function () {
+
     });
 });
 

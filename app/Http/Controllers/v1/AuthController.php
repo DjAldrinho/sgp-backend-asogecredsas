@@ -84,6 +84,19 @@ class AuthController extends Controller
 
     public function getAuthUser(Request $request)
     {
-        return response()->json($request->user());
+        return response()->json(['user' => $request->user()]);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'new_password' => 'required|string'
+        ]);
+
+        $request->user()->password = bcrypt($request->new_password);
+        $request->user()->save();
+
+        return response()->json(['message' => 'Password Updated!'], 200);
+
     }
 }
