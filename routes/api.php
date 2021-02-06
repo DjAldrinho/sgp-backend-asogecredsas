@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\v1\AuthController;
+use App\Http\Controllers\v1\ClientController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,10 +18,15 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
+    Route::get('logout', [AuthController::class, 'logout'])->middleware('auth:api');
+    Route::get('user', [AuthController::class, 'getAuthUser'])->middleware('auth:api');;
+});
+
+Route::middleware('auth:api')->group(function () {
+    Route::group(['prefix' => 'clients'], function () {
+        Route::get('/', [ClientController::class, 'index']);
+        Route::post('create', [ClientController::class, 'create']);
+    });
 });
 
 
-Route::group(['middleware' => ['auth:api'], 'prefix' => 'auth'], function () {
-    Route::get('logout', [AuthController::class, 'logout']);
-    Route::get('user', [AuthController::class, 'getAuthUser']);
-});
