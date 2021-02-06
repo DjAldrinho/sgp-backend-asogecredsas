@@ -16,7 +16,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        return response()->json(['clients' => Client::all()], 200);
+        return response()->json(['clients' => Client::paginate(50)], 200);
     }
 
     public function getByType(Request $request)
@@ -29,7 +29,7 @@ class ClientController extends Controller
 
             $types = explode(',', $request->types);
 
-            $clients = Client::whereJsonContains('client_type', $types)->get();
+            $clients = Client::whereJsonContains('client_type', $types)->paginate(50);
 
             return response()->json(['clients' => $clients]);
         } catch (\Exception $exception) {
