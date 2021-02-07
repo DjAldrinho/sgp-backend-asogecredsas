@@ -1,10 +1,12 @@
 <?php
 
+
+use App\Http\Controllers\v1\AccountController;
 use App\Http\Controllers\v1\AuthController;
 use App\Http\Controllers\v1\ClientController;
-use App\Http\Controllers\v1\DepositAccountController;
 use App\Http\Controllers\v1\LawyerController;
 use App\Http\Controllers\v1\SupplierController;
+use App\Http\Controllers\v1\TypeTransactionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -51,9 +53,15 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('delete/{supplier}', [SupplierController::class, 'destroy']);
     });
 
-    Route::group(['prefix' => 'deposit-account'], function () {
-        Route::patch('deposit', [DepositAccountController::class, 'deposit']);
-        Route::patch('retire', [DepositAccountController::class, 'retire']);
+    Route::group(['prefix' => 'accounts'], function () {
+        Route::post('deposit', [AccountController::class, 'deposit']);
+    });
+
+    Route::group(['prefix' => 'type-transaction'], function () {
+        Route::get('all', [TypeTransactionController::class, 'index']);
+        Route::patch('update/{type}', [TypeTransactionController::class, 'update']);
+        Route::post('create', [TypeTransactionController::class, 'create']);
+        Route::delete('delete/{type}', [TypeTransactionController::class, 'destroy']);
     });
 });
 

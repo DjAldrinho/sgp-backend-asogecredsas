@@ -8,23 +8,13 @@ use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function index()
     {
         return response()->json(['suppliers' => Supplier::all()], 200);
     }
 
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function create(Request $request)
     {
 
@@ -44,13 +34,6 @@ class SupplierController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param Supplier $supplier
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function update(Request $request, Supplier $supplier)
     {
 
@@ -69,12 +52,6 @@ class SupplierController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Supplier $supplier
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function destroy(Supplier $supplier)
     {
         try {
