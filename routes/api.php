@@ -55,6 +55,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::group(['prefix' => 'accounts'], function () {
         Route::post('deposit', [AccountController::class, 'deposit']);
+        Route::post('retire', [AccountController::class, 'retire']);
     });
 
     Route::group(['prefix' => 'type-transaction'], function () {

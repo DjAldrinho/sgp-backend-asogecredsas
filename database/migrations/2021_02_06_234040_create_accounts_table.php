@@ -16,8 +16,8 @@ class CreateAccountsTable extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->integer('value');
-            $table->integer('old_value');
+            $table->bigInteger('value');
+            $table->bigInteger('old_value');
             $table->timestamps();
             $table->softDeletes();
         });
