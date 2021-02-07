@@ -19,7 +19,7 @@ class CreateLawyersTable extends Migration
             $table->string('document_number', 50);
             $table->string('name', 150)->comment('Nombre Completo');
             $table->string('phone')->nullable();
-            $table->string('email')->nullable();
+            $table->string('email')->unique();
             $table->string('professional_card')->nullable();
             $table->softDeletes();
             $table->rememberToken();

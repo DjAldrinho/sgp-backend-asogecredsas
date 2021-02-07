@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\v1\AuthController;
 use App\Http\Controllers\v1\ClientController;
+use App\Http\Controllers\v1\DepositAccountController;
 use App\Http\Controllers\v1\LawyerController;
+use App\Http\Controllers\v1\SupplierController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,8 +44,16 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('delete/{lawyer}', [LawyerController::class, 'destroy']);
     });
 
-    Route::group(['prefix' => 'deposit-account'], function () {
+    Route::group(['prefix' => 'suppliers'], function () {
+        Route::get('all', [SupplierController::class, 'index']);
+        Route::patch('update/{supplier}', [SupplierController::class, 'update']);
+        Route::post('create', [SupplierController::class, 'create']);
+        Route::delete('delete/{supplier}', [SupplierController::class, 'destroy']);
+    });
 
+    Route::group(['prefix' => 'deposit-account'], function () {
+        Route::patch('deposit', [DepositAccountController::class, 'deposit']);
+        Route::patch('retire', [DepositAccountController::class, 'retire']);
     });
 });
 
