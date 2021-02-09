@@ -13,7 +13,8 @@ class TypeTransaction extends Model
     protected $table = 'type_transaction';
 
     protected $fillable = [
-        'name'
+        'name',
+        'status'
     ];
 
 

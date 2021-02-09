@@ -21,6 +21,7 @@ class CreateLawyersTable extends Migration
             $table->string('phone')->nullable();
             $table->string('email')->unique();
             $table->string('professional_card')->nullable();
+            $table->char('status')->default('A')->comment('A: Activo, I: Inactivo');
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();

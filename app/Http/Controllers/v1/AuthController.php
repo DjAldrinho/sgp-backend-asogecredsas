@@ -51,7 +51,7 @@ class AuthController extends Controller
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string',
             'document_type' => 'required|string|in:cc,ce,tc,pp',
-            'document_number' => 'required|string',
+            'document_number' => 'required|string|unique:users',
             'is_administrator' => 'boolean',
         ]);
 

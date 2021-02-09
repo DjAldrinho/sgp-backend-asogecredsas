@@ -11,10 +11,16 @@ class Supplier extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name'
+        'name',
+        'status'
     ];
 
     protected $hidden = [
         'deleted_at'
     ];
+
+    public function setOldValueAttribute($value)
+    {
+        $this->attributes['old_value'] = $this->value;
+    }
 }

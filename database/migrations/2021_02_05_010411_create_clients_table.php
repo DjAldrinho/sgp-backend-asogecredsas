@@ -22,6 +22,7 @@ class CreateClientsTable extends Migration
             $table->string('email')->nullable();
             $table->string('sign')->nullable();
             $table->json('client_type')->nullable()->comment('Tipos de usuario');
+            $table->char('status')->default('A')->comment('A: Activo, I: Inactivo');
             $table->softDeletes();
             $table->timestamps();
         });

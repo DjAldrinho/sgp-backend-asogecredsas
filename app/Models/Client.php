@@ -22,7 +22,8 @@ class Client extends Model
         'document_type',
         'document_number',
         'sign',
-        'client_type'
+        'client_type',
+        'status'
     ];
 
     protected $casts = [

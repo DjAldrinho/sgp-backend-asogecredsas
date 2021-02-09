@@ -16,6 +16,7 @@ class CreateSuppliersTable extends Migration
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->char('status')->default('A')->comment('A: Activo, I: Inactivo');
             $table->timestamps();
             $table->softDeletes();
         });

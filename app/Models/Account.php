@@ -13,9 +13,10 @@ class Account extends Model
     protected $fillable = [
         'name',
         'old_value',
-        'value'
+        'value',
+        'account_number',
+        'status'
     ];
-
 
     protected $hidden = [
         'deleted_at'

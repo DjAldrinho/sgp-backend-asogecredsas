@@ -54,6 +54,7 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::group(['prefix' => 'accounts'], function () {
+        Route::post('create', [AccountController::class, 'create']);
         Route::post('deposit', [AccountController::class, 'deposit']);
         Route::post('retire', [AccountController::class, 'retire']);
     });

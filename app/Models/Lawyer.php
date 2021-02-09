@@ -21,7 +21,8 @@ class Lawyer extends Model
         'phone',
         'document_type',
         'document_number',
-        'professional_card'
+        'professional_card',
+        'status'
     ];
 
     /**
