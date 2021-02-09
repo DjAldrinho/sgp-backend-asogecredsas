@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         if (env('APP_ENV') == 'local') {
-            User::factory(5)->create();
+            User::factory(2)->create();
             Client::factory(20)->create();
             Lawyer::factory(5)->create();
             Supplier::factory(3)->create();

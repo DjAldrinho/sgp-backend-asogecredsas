@@ -6,6 +6,7 @@ use App\Http\Controllers\v1\AuthController;
 use App\Http\Controllers\v1\ClientController;
 use App\Http\Controllers\v1\LawyerController;
 use App\Http\Controllers\v1\SupplierController;
+use App\Http\Controllers\v1\TransactionController;
 use App\Http\Controllers\v1\TypeTransactionController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
-    Route::post('register', [AuthController::class, 'register']);
+    Route::post('register', [AuthController::class, 'register'])->middleware('auth:api');
     Route::get('logout', [AuthController::class, 'logout'])->middleware('auth:api');
     Route::get('user', [AuthController::class, 'getAuthUser'])->middleware('auth:api');
     Route::patch('change-password', [AuthController::class, 'changePassword'])->middleware('auth:api');
@@ -57,6 +58,10 @@ Route::middleware('auth:api')->group(function () {
         Route::get('all', [AccountController::class, 'index']);
         Route::post('create', [AccountController::class, 'create']);
         Route::patch('change-account', [AccountController::class, 'changeAccount']);
+    });
+
+    Route::group(['prefix' => 'transactions', 'middleware' => 'validate_admin'], function () {
+        Route::get('all/{account}', [TransactionController::class, 'index']);
     });
 
     Route::group(['prefix' => 'type-transaction'], function () {

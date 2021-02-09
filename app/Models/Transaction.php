@@ -25,4 +25,18 @@ class Transaction extends Model
         return $this->belongsTo(Account::class);
     }
 
+    public function scopeByAccount($query, $account)
+    {
+        if ($account) {
+            return $query->where('account_id', '=', $account);
+        }
+    }
+
+    public function scopeOrigin($query, $origin)
+    {
+        if ($origin) {
+            return $query->where('origin', '=', $origin);
+        }
+    }
+
 }
