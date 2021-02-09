@@ -19,7 +19,7 @@ class CreateAccountsTable extends Migration
             $table->string('account_number')->unique();
             $table->bigInteger('value');
             $table->bigInteger('old_value');
-            $table->char('status')->default('A')->comment('A: Activo, I: Inactivo');
+            $table->char('status', 1)->default('A')->comment('A: Activo, I: Inactivo');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -24,6 +24,7 @@ class CreateTransactionsTable extends Migration
             $table->foreign('account_id')->references('id')->on('accounts');
             $table->unsignedBigInteger('type_transaction_id')->nullable();
             $table->foreign('type_transaction_id')->references('id')->on('type_transaction');
+            $table->text('commentary')->nullable();
             $table->timestamps();
         });
     }

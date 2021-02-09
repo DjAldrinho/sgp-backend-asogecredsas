@@ -53,10 +53,11 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('delete/{supplier}', [SupplierController::class, 'destroy']);
     });
 
-    Route::group(['prefix' => 'accounts'], function () {
+    Route::group(['prefix' => 'accounts', 'middleware' => 'validate_admin'], function () {
+        Route::get('all', [AccountController::class, 'index']);
         Route::post('create', [AccountController::class, 'create']);
-        Route::post('deposit', [AccountController::class, 'deposit']);
-        Route::post('retire', [AccountController::class, 'retire']);
+        Route::patch('deposit', [AccountController::class, 'deposit']);
+        Route::patch('retire', [AccountController::class, 'retire']);
     });
 
     Route::group(['prefix' => 'type-transaction'], function () {

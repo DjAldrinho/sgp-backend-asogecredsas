@@ -9,6 +9,17 @@ use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
+    public function index(Request $request)
+    {
+        $per_page = isset($request->per_page) ? $request->per_page : 50;
+
+        $accounts = Account::paginate($per_page);
+
+        $accounts->appends(['per_page' => $per_page]);
+
+        return response()->json(['accounts' => $accounts], 200);
+    }
+
     public function create(Request $request)
     {
         $request->validate([

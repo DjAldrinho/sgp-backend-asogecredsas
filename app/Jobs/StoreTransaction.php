@@ -14,20 +14,21 @@ class StoreTransaction implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $account_id, $type_transaction_id, $origin, $supplier_id, $amount;
+    protected $account_id, $type_transaction_id, $origin, $supplier_id, $amount, $commentary;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($account_id, $origin, $amount, $supplier_id = 3, $type_transaction_id = 5)
+    public function __construct($account_id, $origin, $amount, $commentary = '', $supplier_id = 3, $type_transaction_id = 5)
     {
         $this->account_id = $account_id;
         $this->type_transaction_id = $type_transaction_id;
         $this->origin = $origin;
         $this->supplier_id = $supplier_id;
         $this->amount = $amount;
+        $this->commentary = $commentary;
     }
 
     /**
@@ -49,7 +50,8 @@ class StoreTransaction implements ShouldQueue
             'origin' => $this->origin,
             'code' => 'T' . time() . '-' . $count,
             'supplier_id' => $this->supplier_id,
-            'value' => $this->amount
+            'value' => $this->amount,
+            'commentary' => $this->commentary
         ]);
     }
 }

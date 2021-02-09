@@ -16,7 +16,7 @@ class CreateTypeTransactionTable extends Migration
         Schema::create('type_transaction', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->char('status')->default('A')->comment('A: Activo, I: Inactivo');
+            $table->char('status', 1)->default('A')->comment('A: Activo, I: Inactivo');
             $table->softDeletes();
             $table->timestamps();
         });
