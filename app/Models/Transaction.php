@@ -15,7 +15,9 @@ class Transaction extends Model
         'origin',
         'code',
         'supplier_id',
-        'value'
+        'value',
+        'user_id',
+        'commentary'
     ];
 
     public function account()

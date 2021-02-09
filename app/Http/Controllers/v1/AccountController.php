@@ -36,7 +36,7 @@ class AccountController extends Controller
                 'old_value' => $request->value
             ]);
 
-            StoreTransaction::dispatchSync($account->id, 'Deposito', $account->value);
+            StoreTransaction::dispatchSync($account->id, 'deposit', $account->value, 'Creacion de cuenta');
 
             return response()->json(['message' => 'Successfully account created!', 'account' => $account], 201);
         } catch (\Exception $exception) {
@@ -44,13 +44,40 @@ class AccountController extends Controller
         }
     }
 
-    public function deposit(Request $request)
+    public function changeAccount(Request $request)
     {
+        $request->validate([
+            'type' => 'required|string|in:deposit,retire',
+            'account_id' => 'required|integer|exists:accounts,id',
+            'supplier_id' => 'required|integer|exists:suppliers,id',
+            'type_transaction' => 'required|integer|exists:type_transaction,id',
+            'amount' => 'required|integer',
+            'commentary' => 'string'
+        ]);
+
+        try {
+            $amount = (int)$request->amount;
+
+            $account = Account::firstWhere(['id' => $request->account_id]);
+
+            if ($request->type === 'retire') {
+                $amount = -abs($amount);
+            }
+
+            $account_value = $account->value;
+            $account->old_value = $account_value;
+            $account->value = $account_value + $amount;
+            $account->save();
+            $account->refresh();
+
+            StoreTransaction::dispatchSync($account->id, $request->type, $account->value,
+                $request->commentary, $request->supplier_id, $request->type_transaction);
+
+            return response()->json(['message' => ucfirst($request->type) . ' Generated!', 'account' => $account], 200);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 409);
+        }
 
     }
 
-    public function retire(Request $request)
-    {
-
-    }
 }

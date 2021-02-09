@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class StoreTransaction implements ShouldQueue
@@ -51,6 +52,7 @@ class StoreTransaction implements ShouldQueue
             'code' => 'T' . time() . '-' . $count,
             'supplier_id' => $this->supplier_id,
             'value' => $this->amount,
+            'user_id' => Auth::id(),
             'commentary' => $this->commentary
         ]);
     }

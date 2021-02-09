@@ -56,8 +56,7 @@ Route::middleware('auth:api')->group(function () {
     Route::group(['prefix' => 'accounts', 'middleware' => 'validate_admin'], function () {
         Route::get('all', [AccountController::class, 'index']);
         Route::post('create', [AccountController::class, 'create']);
-        Route::patch('deposit', [AccountController::class, 'deposit']);
-        Route::patch('retire', [AccountController::class, 'retire']);
+        Route::patch('change-account', [AccountController::class, 'changeAccount']);
     });
 
     Route::group(['prefix' => 'type-transaction'], function () {
