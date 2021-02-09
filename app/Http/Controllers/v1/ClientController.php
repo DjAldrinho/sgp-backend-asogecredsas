@@ -14,9 +14,16 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(['clients' => Client::paginate(50)], 200);
+
+        $per_page = isset($request->per_page) ? $request->per_page : 50;
+
+        $clients = Client::paginate($per_page);
+
+        $clients->appends(['per_page' => $per_page]);
+
+        return response()->json(['clients' => $clients], 200);
     }
 
     public function getByType(Request $request)

@@ -14,9 +14,15 @@ class LawyerController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(['laywers' => Lawyer::paginate(50)], 200);
+        $per_page = isset($request->per_page) ? $request->per_page : 50;
+
+        $lawyers = Lawyer::paginate($per_page);
+
+        $lawyers->appends(['per_page' => $per_page]);
+
+        return response()->json(['laywers' => $lawyers], 200);
     }
 
 

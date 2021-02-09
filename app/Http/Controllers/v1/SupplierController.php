@@ -9,9 +9,16 @@ use Illuminate\Http\Request;
 class SupplierController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(['suppliers' => Supplier::all()], 200);
+
+        $per_page = isset($request->per_page) ? $request->per_page : 50;
+
+        $suppliers = Supplier::paginate($per_page);
+
+        $suppliers->appends(['per_page' => $per_page]);
+
+        return response()->json(['suppliers' => $suppliers], 200);
     }
 
 
