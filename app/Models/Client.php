@@ -16,18 +16,13 @@ class Client extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'email',
-        'phone',
-        'document_type',
-        'document_number',
-        'sign',
-        'client_type',
-        'status'
+        'name', 'email', 'phone', 'document_type', 'document_number', 'sign', 'client_type', 'status',
+        'position', 'salary', 'start_date', 'bonding'
     ];
 
     protected $casts = [
-        'client_type' => 'object'
+        'client_type' => 'object',
+        'start_date' => 'date'
     ];
 
     /**

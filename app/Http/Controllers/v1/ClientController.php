@@ -58,11 +58,15 @@ class ClientController extends Controller
         $request->validate([
             'name' => 'required|string',
             'email' => 'string|email',
-            'phone' => 'required|string',
-            'document_type' => 'required|string|in:cc,ce,tc,pp',
+            'phone' => 'string',
+            'document_type' => 'required|string|in:cc,ce,ti,pp',
             'document_number' => 'required|string|unique:clients',
-            'sign' => 'required|file',
+            'sign' => 'file',
             'client_type' => 'required|string',
+            'position' => 'required|string',
+            'salary' => 'required|integer',
+            'start_date' => 'required|date',
+            'bonding' => 'required|string',
         ]);
 
         try {
@@ -76,7 +80,11 @@ class ClientController extends Controller
                 'document_type' => $request->document_type,
                 'document_number' => $request->document_number,
                 'sign' => FileManager::uploadPublicFiles($request->file('sign'), 'clients'),
-                'client_type' => json_encode($client_type)
+                'client_type' => json_encode($client_type),
+                'position' => $request->position,
+                'salary' => $request->salary,
+                'start_date' => $request->start_date,
+                'bonding' => $request->bonding
             ]);
 
             return response()->json(['message' => 'Successfully created client!', 'client' => $client], 201);
