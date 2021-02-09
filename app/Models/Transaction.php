@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Transaction extends Model
 {
@@ -16,7 +15,12 @@ class Transaction extends Model
         'origin',
         'code',
         'supplier_id',
-        'account_id'
+        'value'
     ];
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class);
+    }
 
 }

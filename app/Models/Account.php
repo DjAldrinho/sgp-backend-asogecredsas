@@ -21,4 +21,9 @@ class Account extends Model
     protected $hidden = [
         'deleted_at'
     ];
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }

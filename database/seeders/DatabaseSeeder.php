@@ -17,10 +17,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(UserAdminSeeder::class);
-        User::factory(5)->create();
-        Client::factory(20)->create();
-        Lawyer::factory(5)->create();
-        Supplier::factory(3)->create();
+
+        $this->call([
+            UserAdminSeeder::class,
+            SupplierSeeder::class,
+            TypeTransactionSeeder::class
+        ]);
+
+        if (env('APP_ENV') == 'local') {
+            User::factory(5)->create();
+            Client::factory(20)->create();
+            Lawyer::factory(5)->create();
+            Supplier::factory(3)->create();
+        }
     }
 }

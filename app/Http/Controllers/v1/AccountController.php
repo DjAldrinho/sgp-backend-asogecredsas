@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\StoreTransaction;
 use App\Models\Account;
 use Illuminate\Http\Request;
 
@@ -24,6 +25,8 @@ class AccountController extends Controller
                 'old_value' => $request->value
             ]);
 
+            StoreTransaction::dispatchSync($account->id, 'Deposito', $account->value);
+
             return response()->json(['message' => 'Successfully account created!', 'account' => $account], 201);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
@@ -32,7 +35,7 @@ class AccountController extends Controller
 
     public function deposit(Request $request)
     {
-        
+
     }
 
     public function retire(Request $request)
