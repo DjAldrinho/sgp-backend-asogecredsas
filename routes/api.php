@@ -61,7 +61,7 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::group(['prefix' => 'transactions', 'middleware' => 'validate_admin'], function () {
-        Route::get('all/{account}', [TransactionController::class, 'index']);
+        Route::get('all', [TransactionController::class, 'index']);
     });
 
     Route::group(['prefix' => 'type-transaction'], function () {

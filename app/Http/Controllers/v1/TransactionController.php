@@ -9,13 +9,13 @@ use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
-    public function index(Request $request, Account $account)
+    public function index(Request $request)
     {
         $per_page = isset($request->per_page) ? $request->per_page : 50;
 
 
-        $transactions = Transaction::byAccount($account->id)->origin($request->origin)
-            ->paginate($per_page);
+        $transactions = Transaction::byAccount($request->account)->origin($request->origin)
+            ->orderBy('created_at', 'desc')->paginate($per_page);
 
         $transactions->appends(['per_page' => $per_page]);
 

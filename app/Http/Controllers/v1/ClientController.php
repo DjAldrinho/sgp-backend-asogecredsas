@@ -120,7 +120,12 @@ class ClientController extends Controller
         $request->validate([
             'email' => 'string|email',
             'phone' => 'required|string',
-            'client_type' => 'required|string'
+            'client_type' => 'required|string',
+            'position' => 'required|string',
+            'salary' => 'required|integer',
+            'start_date' => 'required|date',
+            'bonding' => 'required|string',
+            'sign' => 'file',
         ]);
 
         try {
@@ -128,6 +133,11 @@ class ClientController extends Controller
             $client->email = $request->email;
             $client->phone = $request->phone;
             $client->client_type = json_encode($client_type);
+            $client->sign = FileManager::uploadPublicFiles($request->file('sign'), 'clients');
+            $client->position = $request->position;
+            $client->salary = $request->salary;
+            $client->start_date = $request->start_date;
+            $client->bonding = $request->bonding;
             $client->save();
             $client->refresh();
             return response()->json(['message' => 'Client Updated!', 'client' => $client], 200);

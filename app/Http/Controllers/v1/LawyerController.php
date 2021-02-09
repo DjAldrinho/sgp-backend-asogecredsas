@@ -39,7 +39,7 @@ class LawyerController extends Controller
             'name' => 'required|string',
             'email' => 'required|string|email|unique:lawyers',
             'phone' => 'required|string',
-            'document_type' => 'required|string|in:cc,ce,tc,pp',
+            'document_type' => 'required|string|in:cc,ce,ti,pp',
             'document_number' => 'required|string|unique:lawyers',
             'professional_card' => 'required|file'
         ]);
