@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAccountsTable extends Migration
+class CreateAdvisersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateAccountsTable extends Migration
      */
     public function up()
     {
-        Schema::create('accounts', function (Blueprint $table) {
+        Schema::create('advisers', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->string('account_number')->unique();
-            $table->decimal('value');
-            $table->decimal('old_value');
+            $table->string('name');
+            $table->string('phone')->nullable();
             $table->char('status', 1)->default('A')->comment('A: Activo, I: Inactivo');
             $table->timestamps();
             $table->softDeletes();
@@ -32,6 +30,6 @@ class CreateAccountsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('accounts');
+        Schema::dropIfExists('advisers');
     }
 }

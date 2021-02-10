@@ -15,7 +15,7 @@ class CreateClientsTable extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->string('document_type', 50)->default('cc')->nullable();
+            $table->string('document_type', 50)->default('cc');
             $table->string('document_number', 50);
             $table->string('name', 150)->comment('Nombre Completo');
             $table->string('phone')->nullable();
