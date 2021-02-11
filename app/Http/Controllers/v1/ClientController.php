@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\v1;
 
 use App\Helpers\FileManager;
+use App\Helpers\ImportExcel;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ClientController extends Controller
 {
@@ -94,6 +96,25 @@ class ClientController extends Controller
         }
     }
 
+    public function createMassive(Request $request)
+    {
+        $request->validate([
+            'document' => 'required|file'
+        ]);
+
+        try {
+
+            $import = new ImportExcel;
+
+            Excel::import($import, request()->file('document'));
+
+            return response()->json(['message' => 'Imported document,' . $import->getRowCount() . ' clients have been created'], 201);
+
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 409);
+        }
+    }
+
 
     /**
      * Display the specified resource.
@@ -161,5 +182,10 @@ class ClientController extends Controller
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()]);
         }
+    }
+
+    public function getTemplate()
+    {
+        return asset('storage') . '/template.xls';
     }
 }

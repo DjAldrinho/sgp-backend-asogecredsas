@@ -15,7 +15,7 @@ class AddFieldsInClientsTable extends Migration
     {
         Schema::table('clients', function (Blueprint $table) {
             $table->string('position')->nullable();
-            $table->integer('salary')->nullable();
+            $table->string('salary')->nullable();
             $table->date('start_date')->nullable();
             $table->string('bonding')->nullable();
         });
