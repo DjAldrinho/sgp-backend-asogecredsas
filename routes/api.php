@@ -4,6 +4,7 @@
 use App\Http\Controllers\v1\AccountController;
 use App\Http\Controllers\v1\AuthController;
 use App\Http\Controllers\v1\ClientController;
+use App\Http\Controllers\v1\CreditController;
 use App\Http\Controllers\v1\LawyerController;
 use App\Http\Controllers\v1\SupplierController;
 use App\Http\Controllers\v1\TransactionController;
@@ -31,7 +32,7 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::middleware('auth:api')->group(function () {
 
-    Route::group(['prefix' => 'clients'], function () {
+    Route::group(['prefix' => 'clients',  'middleware' => 'validate_admin'], function () {
         Route::get('all', [ClientController::class, 'index']);
         Route::get('info/{client}', [ClientController::class, 'show']);
         Route::get('search/types', [ClientController::class, 'getByType']);
@@ -63,8 +64,12 @@ Route::middleware('auth:api')->group(function () {
         Route::patch('change-account', [AccountController::class, 'changeAccount']);
     });
 
-    Route::group(['prefix' => 'transactions', 'middleware' => 'validate_admin'], function () {
+    Route::group(['prefix' => 'transactions'], function () {
         Route::get('all', [TransactionController::class, 'index']);
+    });
+
+    Route::group(['prefix' => 'credits'], function () {
+        Route::get('all', [CreditController::class, 'index']);
     });
 
     Route::group(['prefix' => 'type-transaction'], function () {

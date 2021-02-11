@@ -140,7 +140,7 @@ class ClientController extends Controller
 
         $request->validate([
             'email' => 'string|email',
-            'phone' => 'required|string',
+            'phone' => 'string',
             'client_type' => 'required|string',
             'position' => 'required|string',
             'salary' => 'required|integer',
