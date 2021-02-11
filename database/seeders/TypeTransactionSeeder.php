@@ -12,26 +12,17 @@ class TypeTransactionSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        TypeTransaction::create([
-           'name' => 'Transferencia'
-        ]);
+        $types_transactions = [
+            'Transferencia', 'Consignación',
+            'Oficina', 'Otro', 'No Aplica'
+        ];
 
-        TypeTransaction::create([
-            'name' => 'Consignación'
-        ]);
-
-        TypeTransaction::create([
-            'name' => 'Oficina'
-        ]);
-
-        TypeTransaction::create([
-            'name' => 'Otro'
-        ]);
-
-        TypeTransaction::create([
-            'name' => 'No Aplica'
-        ]);
+        foreach ($types_transactions as $key => $types_transaction) {
+            TypeTransaction::create([
+                'name' => $types_transaction
+            ]);
+        }
     }
 }

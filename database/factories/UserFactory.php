@@ -20,14 +20,14 @@ class UserFactory extends Factory
      *
      * @return array
      */
-    public function definition()
+    public function definition(): array
     {
         return [
             'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
             'email_verified_at' => now(),
             'document_type' => $this->faker->randomElement(['cc', 'ce', 'tc', 'pp']),
-            'document_number' => $this->faker->unique()->randomNumber(7),
+            'document_number' => $this->faker->unique()->numberBetween(102345678, 196325874),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
         ];

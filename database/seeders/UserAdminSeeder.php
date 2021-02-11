@@ -13,39 +13,26 @@ class UserAdminSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        User::create([
-            'name' => 'Aldray Narvaez',
-            'email' => 'aldraynarvaez@gmail.com',
-            'email_verified_at' => now(),
-            'document_type' => 'cc',
-            'document_number' => 1234567891,
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10),
-            'is_administrator' => true
-        ]);
 
-        User::create([
-            'name' => 'Jesus Agamez',
-            'email' => 'jesusagamez@gmail.com',
-            'email_verified_at' => now(),
-            'document_type' => 'cc',
-            'document_number' => 1234567892,
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10),
-            'is_administrator' => true
-        ]);
+        $users = [
+            ['name' => 'Aldray Narvaez', 'email' => 'aldraynarvaez@gmail.com', 'document_number' => 1234567891],
+            ['name' => 'Jesus Agamez', 'email' => 'jesusagamez@gmail.com', 'document_number' => 1234567892],
+            ['name' => 'Deiner Vega', 'email' => 'deinervega@gmail.com', 'document_number' => 1234567893]
+        ];
 
-        User::create([
-            'name' => 'Deiner Vega',
-            'email' => 'deinervega@gmail.com',
-            'email_verified_at' => now(),
-            'document_type' => 'cc',
-            'document_number' => 1234567893,
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10),
-            'is_administrator' => true
-        ]);
+        foreach ($users as $key => $user) {
+            User::create([
+                'name' => $user["name"],
+                'email' => $user["email"],
+                'email_verified_at' => now(),
+                'document_type' => 'cc',
+                'document_number' => $user["document_number"],
+                'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+                'remember_token' => Str::random(10),
+                'is_administrator' => true
+            ]);
+        }
     }
 }

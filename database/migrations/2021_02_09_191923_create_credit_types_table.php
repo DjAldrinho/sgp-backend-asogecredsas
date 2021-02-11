@@ -11,7 +11,7 @@ class CreateCreditTypesTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('credit_types', function (Blueprint $table) {
             $table->id();
@@ -28,7 +28,7 @@ class CreateCreditTypesTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('credit_types');
     }

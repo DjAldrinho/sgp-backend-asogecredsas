@@ -11,15 +11,15 @@ class CreateCreditsDetailTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('credit_details', function (Blueprint $table) {
             $table->id();
             $table->integer('code_fee');
-            $table->decimal('capital_value');
-            $table->decimal('capital_balance');
-            $table->decimal('value_fee');
-            $table->decimal('value_interest');
+            $table->double('capital_value');
+            $table->double('capital_balance');
+            $table->double('value_fee');
+            $table->double('value_interest');
             $table->date('expired_date');
             $table->unsignedBigInteger('credit_id');
             $table->foreign('credit_id')->references('id')->on('credits');
@@ -32,7 +32,7 @@ class CreateCreditsDetailTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('credit_details');
     }

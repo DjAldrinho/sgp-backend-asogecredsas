@@ -12,19 +12,16 @@ class SupplierSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
+        $names = [
+            'Oficina', 'Otro', 'No Aplica'
+        ];
 
-        Supplier::create([
-            'name' => 'Oficina'
-        ]);
-
-        Supplier::create([
-            'name' => 'Otro'
-        ]);
-
-        Supplier::create([
-            'name' => 'No Aplica'
-        ]);
+        foreach ($names as $key => $name) {
+            Supplier::create([
+                'name' => $name
+            ]);
+        }
     }
 }

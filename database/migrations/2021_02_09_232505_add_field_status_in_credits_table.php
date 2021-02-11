@@ -11,7 +11,7 @@ class AddFieldStatusInCreditsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('credits', function (Blueprint $table) {
             $table->char('status', 1)->default('A')->comment('A: Activo, F: Finalizado, P: Pendiente');
@@ -23,7 +23,7 @@ class AddFieldStatusInCreditsTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('credits', function (Blueprint $table) {
             $table->removeColumn('status');

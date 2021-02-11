@@ -11,14 +11,15 @@ class CreateAccountsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function
+    up(): void
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
             $table->string('account_number')->unique();
-            $table->decimal('value');
-            $table->decimal('old_value');
+            $table->double('value');
+            $table->double('old_value');
             $table->char('status', 1)->default('A')->comment('A: Activo, I: Inactivo');
             $table->timestamps();
             $table->softDeletes();
@@ -30,7 +31,7 @@ class CreateAccountsTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('accounts');
     }

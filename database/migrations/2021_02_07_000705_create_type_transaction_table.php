@@ -11,7 +11,7 @@ class CreateTypeTransactionTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('type_transaction', function (Blueprint $table) {
             $table->id();
@@ -27,7 +27,7 @@ class CreateTypeTransactionTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('type_transaction');
     }

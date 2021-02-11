@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Supplier;
+use App\Models\Adviser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class SupplierFactory extends Factory
+class AdviserFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Supplier::class;
+    protected $model = Adviser::class;
 
     /**
      * Define the model's default state.
@@ -22,7 +22,8 @@ class SupplierFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->company
+            'name' => $this->faker->name,
+            'phone' => $this->faker->phoneNumber
         ];
     }
 }

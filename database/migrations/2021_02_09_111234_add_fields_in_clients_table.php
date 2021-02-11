@@ -11,7 +11,7 @@ class AddFieldsInClientsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('clients', function (Blueprint $table) {
             $table->string('position')->nullable();
@@ -26,7 +26,7 @@ class AddFieldsInClientsTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('clients', function (Blueprint $table) {
             $table->removeColumn('position');

@@ -17,7 +17,7 @@ class CreateTransactionsTable extends Migration
             $table->id();
             $table->string('origin');
             $table->string('code')->unique();
-            $table->unsignedDecimal('value');
+            $table->unsignedDouble('value');
             $table->unsignedBigInteger('supplier_id')->nullable();
             $table->foreign('supplier_id')->references('id')->on('suppliers');
             $table->unsignedBigInteger('account_id');

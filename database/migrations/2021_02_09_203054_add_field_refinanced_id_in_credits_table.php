@@ -11,7 +11,7 @@ class AddFieldRefinancedIdInCreditsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('credits', function (Blueprint $table) {
             $table->unsignedBigInteger('refinanced_id')->nullable();
@@ -24,7 +24,7 @@ class AddFieldRefinancedIdInCreditsTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('credits', function (Blueprint $table) {
             $table->dropConstrainedForeignId('refinanced_id');
