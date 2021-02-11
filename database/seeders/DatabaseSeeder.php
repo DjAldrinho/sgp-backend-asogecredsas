@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
             CreditTypesSeeder::class
         ]);
 
-        if (env('APP_ENV') == 'local') {
+        if (config('app.env') == 'local') {
             User::factory(5)->create();
             Adviser::factory(10)->create();
             Client::factory(20)->create();
