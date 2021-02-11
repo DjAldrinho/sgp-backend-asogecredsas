@@ -30,12 +30,15 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 Route::middleware('auth:api')->group(function () {
+
     Route::group(['prefix' => 'clients'], function () {
         Route::get('all', [ClientController::class, 'index']);
         Route::get('info/{client}', [ClientController::class, 'show']);
         Route::get('search/types', [ClientController::class, 'getByType']);
+        Route::get('template', [ClientController::class, 'getTemplate']);
         Route::patch('update/{client}', [ClientController::class, 'update']);
         Route::post('create', [ClientController::class, 'create']);
+        Route::post('create-massive', [ClientController::class, 'createMassive']);
         Route::delete('delete/{client}', [ClientController::class, 'destroy']);
     });
 
