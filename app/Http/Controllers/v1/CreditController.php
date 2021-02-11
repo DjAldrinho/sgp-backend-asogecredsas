@@ -14,7 +14,7 @@ class CreditController extends Controller
         $per_page = isset($request->per_page) ? $request->per_page : 50;
 
 
-        $transactions = Credit::byAccount($request->account)->client($request->client)
+        $transactions = Credit::byAccount($request->account)->byClient($request->client)
             ->orderBy('created_at', 'desc')->paginate($per_page);
 
         $transactions->appends(['per_page' => $per_page]);
