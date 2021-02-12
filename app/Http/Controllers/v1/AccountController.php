@@ -77,7 +77,16 @@ class AccountController extends Controller
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
         }
+    }
 
+    public function destroy(Account $account)
+    {
+        try {
+            $account->delete();
+            return response()->json(['message' => 'Account deleted!'], 200);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()]);
+        }
     }
 
 }

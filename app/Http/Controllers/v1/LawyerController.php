@@ -22,7 +22,7 @@ class LawyerController extends Controller
 
         $lawyers->appends(['per_page' => $per_page]);
 
-        return response()->json(['laywers' => $lawyers], 200);
+        return response()->json(['lawyers' => $lawyers], 200);
     }
 
 

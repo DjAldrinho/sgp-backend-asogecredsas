@@ -43,7 +43,7 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('delete/{client}', [ClientController::class, 'destroy']);
     });
 
-    Route::group(['prefix' => 'lawyers'], function () {
+    Route::group(['prefix' => 'lawyers', 'middleware' => 'validate_admin'], function () {
         Route::get('all', [LawyerController::class, 'index']);
         Route::get('info/{lawyer}', [LawyerController::class, 'show']);
         Route::patch('update/{lawyer}', [LawyerController::class, 'update']);
@@ -62,6 +62,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('all', [AccountController::class, 'index']);
         Route::post('create', [AccountController::class, 'create']);
         Route::patch('change-account', [AccountController::class, 'changeAccount']);
+        Route::delete('delete/{account}', [AccountController::class, 'destroy']);
     });
 
     Route::group(['prefix' => 'transactions'], function () {
