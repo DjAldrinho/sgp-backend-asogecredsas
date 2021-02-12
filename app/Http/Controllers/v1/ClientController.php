@@ -108,7 +108,7 @@ class ClientController extends Controller
 
             Excel::import($import, request()->file('document'));
 
-            return response()->json(['message' => 'Imported document,' . $import->getRowCount() . ' clients have been created'], 201);
+            return response()->json(['message' => 'Imported document, ' . $import->getRowCount() . ' clients have been created'], 201);
 
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
@@ -139,6 +139,7 @@ class ClientController extends Controller
     {
 
         $request->validate([
+            'name' => 'required|string',
             'email' => 'string|email',
             'phone' => 'string',
             'client_type' => 'required|string',
@@ -147,10 +148,12 @@ class ClientController extends Controller
             'start_date' => 'required|date',
             'bonding' => 'required|string',
             'sign' => 'file',
+            'document_number' => 'required|string|unique:clients,id,' . $client->id,
         ]);
 
         try {
             $client_type = explode(',', $request->client_type);
+            $client->name = $request->name;
             $client->email = $request->email;
             $client->phone = $request->phone;
             $client->client_type = json_encode($client_type);
@@ -159,6 +162,7 @@ class ClientController extends Controller
             $client->salary = $request->salary;
             $client->start_date = $request->start_date;
             $client->bonding = $request->bonding;
+            $client->document_number = $request->document_number;
             $client->save();
             $client->refresh();
             return response()->json(['message' => 'Client Updated!', 'client' => $client], 200);

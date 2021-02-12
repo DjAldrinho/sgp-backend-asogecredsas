@@ -17,18 +17,25 @@ class ImportExcel implements ToCollection, WithStartRow
     public function collection(Collection $collection)
     {
         foreach ($collection as $row) {
-            ++$this->rows;
 
 
-            Client::create([
-                'document_number' => isset($row[0]) ? $this->cleanInput($row[0]) : 0,
-                'name' => isset($row[1]) ? $this->cleanInput($row[1]) : "NA",
-                'position' => isset($row[2]) ? $this->cleanInput($row[2]) : "NA",
-                'salary' => isset($row[3]) ? $this->cleanInput($row[3]) : 0,
-                'start_date' => $this->convertDateExcelToPHP($row[4]),
-                'bonding' => isset($row[5]) ? $this->cleanInput($row[5]) : "NA",
-                'client_type' => json_encode(['debtor'])
-            ]);
+            $client = Client::where('document_number', '=', $row[0])->exists();
+
+            if (!$client) {
+
+                ++$this->rows;
+
+                Client::create([
+                    'document_number' => isset($row[0]) ? $this->cleanInput($row[0]) : 0,
+                    'name' => isset($row[1]) ? $this->cleanInput($row[1]) : "NA",
+                    'position' => isset($row[2]) ? $this->cleanInput($row[2]) : "NA",
+                    'salary' => isset($row[3]) ? $this->cleanInput($row[3]) : 0,
+                    'start_date' => $this->convertDateExcelToPHP($row[4]),
+                    'bonding' => isset($row[5]) ? $this->cleanInput($row[5]) : "NA",
+                    'client_type' => json_encode(['debtor'])
+                ]);
+            }
+
         }
     }
 

@@ -85,13 +85,17 @@ class LawyerController extends Controller
     {
 
         $request->validate([
+            'name' => 'required|string',
             'email' => 'required|string|email|unique:lawyers,email,' . $lawyer->id,
             'phone' => 'required|string',
+            'document_number' => 'required|string|unique:lawyers,id,' . $lawyer->id,
         ]);
 
         try {
             $lawyer->email = $request->email;
             $lawyer->phone = $request->phone;
+            $lawyer->name = $request->name;
+            $lawyer->document_number = $request->document_number;
             $lawyer->save();
             $lawyer->refresh();
             return response()->json(['message' => 'Lawyer Updated!', 'lawyer' => $lawyer], 200);
