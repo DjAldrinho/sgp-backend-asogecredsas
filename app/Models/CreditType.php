@@ -11,4 +11,6 @@ class CreditType extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['name', 'value', 'status'];
+
+    protected $hidden = ['deleted_at '];
 }

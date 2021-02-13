@@ -15,14 +15,15 @@ class StoreTransaction implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $account_id, $type_transaction_id, $origin, $supplier_id, $amount, $commentary;
+    protected $account_id, $type_transaction_id, $origin, $supplier_id, $amount, $commentary, $credit_id;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($account_id, $origin, $amount, $commentary = '', $supplier_id = 3, $type_transaction_id = 5)
+    public function __construct($account_id, $origin, $amount, $commentary = '', $supplier_id = 3,
+                                $type_transaction_id = 5, $credit_id = 0)
     {
         $this->account_id = $account_id;
         $this->type_transaction_id = $type_transaction_id;
@@ -30,6 +31,7 @@ class StoreTransaction implements ShouldQueue
         $this->supplier_id = $supplier_id;
         $this->amount = $amount;
         $this->commentary = $commentary;
+        $this->credit_id = $credit_id;
     }
 
     /**
@@ -46,14 +48,15 @@ class StoreTransaction implements ShouldQueue
         $count = $count + 1;
 
         Transaction::create([
-            'account_id' => $this->account_id,
-            'type_transaction_id' => $this->type_transaction_id,
             'origin' => $this->origin,
             'code' => 'T' . time() . '-' . $count,
-            'supplier_id' => $this->supplier_id,
             'value' => $this->amount,
+            'supplier_id' => $this->supplier_id,
+            'account_id' => $this->account_id,
+            'type_transaction_id' => $this->type_transaction_id,
+            'commentary' => $this->commentary,
             'user_id' => Auth::id(),
-            'commentary' => $this->commentary
+            'credit_id' => $this->credit_id
         ]);
     }
 }

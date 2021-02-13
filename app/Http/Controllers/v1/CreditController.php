@@ -9,6 +9,20 @@ use Illuminate\Http\Request;
 class CreditController extends Controller
 {
 
+    public function create(Request $request)
+    {
+
+        $request->validate([
+            ''
+        ]);
+
+        try {
+            $count = Credit::count();
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 409);
+        }
+    }
+
     public function index(Request $request)
     {
         $per_page = isset($request->per_page) ? $request->per_page : 50;

@@ -44,6 +44,20 @@ class AccountController extends Controller
         }
     }
 
+    public function update(Request $request, Account $account)
+    {
+        $request->validate([
+            'name' => 'required|string|unique:accounts,name,' . $account->id,
+            'status' => 'required|string|in:A,I'
+        ]);
+
+        $account->name = $request->name;
+        $account->status = $request->status;
+        $account->save();
+
+        return response()->json(['message' => 'Account Updated', 'account' => $account], 200);
+    }
+
     public function changeAccount(Request $request)
     {
         $request->validate([

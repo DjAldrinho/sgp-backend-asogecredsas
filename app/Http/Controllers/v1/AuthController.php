@@ -11,6 +11,18 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        $per_page = isset($request->per_page) ? $request->per_page : 50;
+
+        $users = User::paginate($per_page);
+
+        $users->appends(['per_page' => $per_page]);
+
+        return response()->json(['users' => $users], 200);
+    }
+
     public function login(Request $request)
     {
         $request->validate([
@@ -69,7 +81,7 @@ class AuthController extends Controller
                 'message' => 'Successfully created user!'
             ], 201);
         } catch (\Exception $exception) {
-            return response()->json(['message' => $exception->getMessage()]);
+            return response()->json(['message' => $exception->getMessage()], 409);
         }
     }
 
@@ -93,10 +105,14 @@ class AuthController extends Controller
             'new_password' => 'required|string'
         ]);
 
-        $request->user()->password = bcrypt($request->new_password);
-        $request->user()->save();
+        try {
+            $request->user()->password = bcrypt($request->new_password);
+            $request->user()->save();
 
-        return response()->json(['message' => 'Password Updated!'], 200);
+            return response()->json(['message' => 'Password Updated!'], 200);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 409);
+        }
 
     }
 }
