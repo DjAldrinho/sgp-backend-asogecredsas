@@ -33,7 +33,7 @@ class CreditTypeController extends Controller
             ]);
 
             return response()->json([
-                'message' => 'Successfully created Credit Type!'
+                'message' => __('credit_type.register')
             ], 201);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
@@ -53,7 +53,7 @@ class CreditTypeController extends Controller
             $creditType->value = $request->value;
             $creditType->save();
             $creditType->refresh();
-            return response()->json(['message' => 'Credit Type Updated!', 'credit_type' => $creditType], 200);
+            return response()->json(['message' => __('credit_type.updated'), 'credit_type' => $creditType], 200);
 
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage(), 409]);
@@ -64,7 +64,7 @@ class CreditTypeController extends Controller
     {
         try {
             $creditType->delete();
-            return response()->json(['message' => 'Credit Type deleted!'], 200);
+            return response()->json(['message' => __('credit_type.deleted')], 200);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()]);
         }

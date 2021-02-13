@@ -50,7 +50,7 @@ class CreditController extends Controller
                 'account_id' => $request->account_id,
             ]);
 
-            return response()->json(['message' => 'Credit Created!', 'credit' => $credit], 200);
+            return response()->json(['message' => __('credits.register'), 'credit' => $credit], 200);
 
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);

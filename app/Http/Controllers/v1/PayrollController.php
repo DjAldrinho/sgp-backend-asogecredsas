@@ -31,7 +31,7 @@ class PayrollController extends Controller
             ]);
 
             return response()->json([
-                'message' => 'Successfully created Payroll!'
+                'message' => __('payrolls.register')
             ], 201);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
@@ -50,7 +50,7 @@ class PayrollController extends Controller
             $payroll->name = $request->name;
             $payroll->save();
             $payroll->refresh();
-            return response()->json(['message' => 'Payroll Updated!', 'payroll' => $payroll], 200);
+            return response()->json(['message' => __('payrolls.updated'), 'payroll' => $payroll], 200);
 
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage(), 409]);
@@ -61,7 +61,7 @@ class PayrollController extends Controller
     {
         try {
             $payroll->delete();
-            return response()->json(['message' => 'Payroll deleted!'], 200);
+            return response()->json(['message' => __('payrolls.deleted')], 200);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()]);
         }

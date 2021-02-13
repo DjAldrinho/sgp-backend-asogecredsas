@@ -14,6 +14,7 @@ class ClientController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
@@ -89,7 +90,7 @@ class ClientController extends Controller
                 'bonding' => $request->bonding
             ]);
 
-            return response()->json(['message' => 'Successfully created client!', 'client' => $client], 201);
+            return response()->json(['message' => __('clients.register'), 'client' => $client], 201);
 
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
@@ -108,7 +109,8 @@ class ClientController extends Controller
 
             Excel::import($import, request()->file('document'));
 
-            return response()->json(['message' => 'Imported document, ' . $import->getRowCount() . ' clients have been created'], 201);
+            return response()->json(['message' => 'Documento importado, ' . $import->getRowCount() .
+                ' clientes han sido creados'], 201);
 
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
@@ -165,7 +167,7 @@ class ClientController extends Controller
             $client->document_number = $request->document_number;
             $client->save();
             $client->refresh();
-            return response()->json(['message' => 'Client Updated!', 'client' => $client], 200);
+            return response()->json(['message' => __('clients.updated'), 'client' => $client], 200);
 
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage(), 409]);
@@ -182,7 +184,7 @@ class ClientController extends Controller
     {
         try {
             $client->delete();
-            return response()->json(['message' => 'Client deleted!'], 200);
+            return response()->json(['message' => __('clients.deleted')], 200);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()]);
         }

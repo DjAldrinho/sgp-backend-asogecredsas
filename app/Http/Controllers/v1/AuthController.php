@@ -52,7 +52,8 @@ class AuthController extends Controller
                 'token_type' => 'Bearer',
                 'expires_at' => Carbon::parse($token->expires_at)->toDateTimeString()
             ],
-            'user' => $user
+            'user' => $user,
+            'message' => __('auth.success')
         ]);
     }
 
@@ -78,7 +79,7 @@ class AuthController extends Controller
             ]);
 
             return response()->json([
-                'message' => 'Successfully created user!'
+                'message' => __('auth.register')
             ], 201);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
@@ -90,7 +91,7 @@ class AuthController extends Controller
         $request->user()->token()->revoke();
 
         return response()->json([
-            'message' => 'Successfully logged out'
+            'message' => __('auth.logout')
         ]);
     }
 
@@ -109,7 +110,7 @@ class AuthController extends Controller
             $request->user()->password = bcrypt($request->new_password);
             $request->user()->save();
 
-            return response()->json(['message' => 'Password Updated!'], 200);
+            return response()->json(['message' => __('auth.new_password')], 200);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
         }

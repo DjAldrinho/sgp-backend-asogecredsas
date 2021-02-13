@@ -43,7 +43,7 @@ class AccountController extends Controller
 
             StoreTransaction::dispatchSync($account->id, 'deposit', $account->value, 'Creacion de cuenta');
 
-            return response()->json(['message' => 'Successfully account created!', 'account' => $account], 201);
+            return response()->json(['message' => __('accounts.register'), 'account' => $account], 201);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
         }
@@ -58,7 +58,7 @@ class AccountController extends Controller
         $account->name = $request->name;
         $account->save();
 
-        return response()->json(['message' => 'Account Updated', 'account' => $account], 200);
+        return response()->json(['message' => __('accounts.updated'), 'account' => $account], 200);
     }
 
     public function changeAccount(Request $request)
@@ -90,7 +90,7 @@ class AccountController extends Controller
             StoreTransaction::dispatchSync($account->id, $request->type, $account->value,
                 $request->commentary, $request->supplier_id, $request->type_transaction);
 
-            return response()->json(['message' => ucfirst($request->type) . ' Generated!', 'account' => $account], 200);
+            return response()->json(['message' => ucfirst($request->type) . ' generado!', 'account' => $account], 200);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
         }
@@ -100,7 +100,7 @@ class AccountController extends Controller
     {
         try {
             $account->delete();
-            return response()->json(['message' => 'Account deleted!'], 200);
+            return response()->json(['message' => __('accounts.deleted')], 200);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()]);
         }
