@@ -27,7 +27,7 @@ class TypeTransactionController extends Controller
                 'name' => $request->name
             ]);
 
-            return response()->json(['message' => __('type_transaction.register'), 'type' => $type], 201);
+            return response()->json(['message' => __('messages.type_transaction.register'), 'type' => $type], 201);
 
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
@@ -45,7 +45,7 @@ class TypeTransactionController extends Controller
             $typeTransaction->name = $request->name;
             $typeTransaction->save();
             $typeTransaction->refresh();
-            return response()->json(['message' => __('type_transaction.updated'), 'type' => $typeTransaction], 200);
+            return response()->json(['message' => __('messages.type_transaction.updated'), 'type' => $typeTransaction], 200);
 
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage(), 409]);
@@ -56,7 +56,7 @@ class TypeTransactionController extends Controller
     {
         try {
             $typeTransaction->delete();
-            return response()->json(['message' => __('type_transaction.deleted')], 200);
+            return response()->json(['message' => __('messages.type_transaction.deleted')], 200);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()]);
         }

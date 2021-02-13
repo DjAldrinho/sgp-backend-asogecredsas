@@ -90,7 +90,7 @@ class ClientController extends Controller
                 'bonding' => $request->bonding
             ]);
 
-            return response()->json(['message' => __('clients.register'), 'client' => $client], 201);
+            return response()->json(['message' => __('messages.clients.register'), 'client' => $client], 201);
 
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
@@ -167,7 +167,7 @@ class ClientController extends Controller
             $client->document_number = $request->document_number;
             $client->save();
             $client->refresh();
-            return response()->json(['message' => __('clients.updated'), 'client' => $client], 200);
+            return response()->json(['message' => __('messages.clients.updated'), 'client' => $client], 200);
 
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage(), 409]);
@@ -184,7 +184,7 @@ class ClientController extends Controller
     {
         try {
             $client->delete();
-            return response()->json(['message' => __('clients.deleted')], 200);
+            return response()->json(['message' => __('messages.clients.deleted')], 200);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()]);
         }

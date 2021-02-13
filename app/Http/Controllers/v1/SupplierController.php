@@ -34,7 +34,7 @@ class SupplierController extends Controller
                 'name' => $request->name
             ]);
 
-            return response()->json(['message' => __('suppliers.register'), 'supplier' => $supplier], 201);
+            return response()->json(['message' => __('messages.suppliers.register'), 'supplier' => $supplier], 201);
 
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
@@ -52,7 +52,7 @@ class SupplierController extends Controller
             $supplier->name = $request->name;
             $supplier->save();
             $supplier->refresh();
-            return response()->json(['message' =>__('suppliers.updated'), 'supplier' => $supplier], 200);
+            return response()->json(['message' =>__('messages.suppliers.updated'), 'supplier' => $supplier], 200);
 
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage(), 409]);
@@ -63,7 +63,7 @@ class SupplierController extends Controller
     {
         try {
             $supplier->delete();
-            return response()->json(['message' => __('suppliers.deleted')], 200);
+            return response()->json(['message' => __('messages.suppliers.deleted')], 200);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()]);
         }

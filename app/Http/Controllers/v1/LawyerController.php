@@ -54,7 +54,7 @@ class LawyerController extends Controller
                 'professional_card' => FileManager::uploadPublicFiles($request->file('professional_card'), 'lawyers'),
             ]);
 
-            return response()->json(['message' => __('lawyers.register'), 'lawyer' => $lawyer], 201);
+            return response()->json(['message' => __('messages.lawyers.register'), 'lawyer' => $lawyer], 201);
 
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
@@ -98,7 +98,7 @@ class LawyerController extends Controller
             $lawyer->document_number = $request->document_number;
             $lawyer->save();
             $lawyer->refresh();
-            return response()->json(['message' => __('lawyers.updated'), 'lawyer' => $lawyer], 200);
+            return response()->json(['message' => __('messages.lawyers.updated'), 'lawyer' => $lawyer], 200);
 
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage(), 409]);
@@ -115,7 +115,7 @@ class LawyerController extends Controller
     {
         try {
             $lawyer->delete();
-            return response()->json(['message' => __('lawyers.deleted')], 200);
+            return response()->json(['message' => __('messages.lawyers.deleted')], 200);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()]);
         }
