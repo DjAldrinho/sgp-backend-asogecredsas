@@ -20,6 +20,11 @@ class AccountController extends Controller
         return response()->json(['accounts' => $accounts], 200);
     }
 
+    public function show(Account $account)
+    {
+        return response()->json(['account' => $account], 200);
+    }
+
     public function create(Request $request)
     {
         $request->validate([
@@ -47,12 +52,10 @@ class AccountController extends Controller
     public function update(Request $request, Account $account)
     {
         $request->validate([
-            'name' => 'required|string|unique:accounts,name,' . $account->id,
-            'status' => 'required|string|in:A,I'
+            'name' => 'required|string|unique:accounts,name,' . $account->id
         ]);
 
         $account->name = $request->name;
-        $account->status = $request->status;
         $account->save();
 
         return response()->json(['message' => 'Account Updated', 'account' => $account], 200);

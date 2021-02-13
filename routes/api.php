@@ -7,6 +7,7 @@ use App\Http\Controllers\v1\ClientController;
 use App\Http\Controllers\v1\CreditController;
 use App\Http\Controllers\v1\CreditTypeController;
 use App\Http\Controllers\v1\LawyerController;
+use App\Http\Controllers\v1\PayrollController;
 use App\Http\Controllers\v1\SupplierController;
 use App\Http\Controllers\v1\TransactionController;
 use App\Http\Controllers\v1\TypeTransactionController;
@@ -62,6 +63,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::group(['prefix' => 'accounts', 'middleware' => 'validate_admin'], function () {
         Route::get('all', [AccountController::class, 'index']);
+        Route::get('get/{account}', [AccountController::class, 'show']);
         Route::post('create', [AccountController::class, 'create']);
         Route::patch('update/{account}', [AccountController::class, 'update']);
         Route::patch('change-account', [AccountController::class, 'changeAccount']);
@@ -85,10 +87,10 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::group(['prefix' => 'payrolls'], function () {
-        Route::get('all', [CreditTypeController::class, 'index']);
-        Route::post('create', [CreditTypeController::class, 'create']);
-        Route::patch('update/{creditType}', [CreditTypeController::class, 'update']);
-        Route::delete('delete/{creditType}', [CreditTypeController::class, 'destroy']);
+        Route::get('all', [PayrollController::class, 'index']);
+        Route::post('create', [PayrollController::class, 'create']);
+        Route::patch('update/{payroll}', [PayrollController::class, 'update']);
+        Route::delete('delete/{payroll}', [PayrollController::class, 'destroy']);
     });
 
     Route::group(['prefix' => 'type-transaction'], function () {

@@ -148,8 +148,7 @@ class ClientController extends Controller
             'start_date' => 'required|date',
             'bonding' => 'required|string',
             'sign' => 'file',
-            'document_number' => 'required|string|unique:clients,id,' . $client->id,
-            'status' => 'required|string|in:A,I'
+            'document_number' => 'required|string|unique:clients,id,' . $client->id
         ]);
 
         try {
@@ -164,7 +163,6 @@ class ClientController extends Controller
             $client->start_date = $request->start_date;
             $client->bonding = $request->bonding;
             $client->document_number = $request->document_number;
-            $client->status = $request->status;
             $client->save();
             $client->refresh();
             return response()->json(['message' => 'Client Updated!', 'client' => $client], 200);

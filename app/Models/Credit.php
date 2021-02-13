@@ -12,8 +12,13 @@ class Credit extends Model
     protected $fillable = [
         'code', 'payroll_id', 'credit_type_id', 'debtor_id', 'first_co_debtor', 'second_co_debtor',
         'start_date', 'refinanced', 'capital_value', 'transport_value', 'other_value', 'interest',
-        'commission', 'fee', 'adviser_id', 'refinanced_id', 'status'
+        'commission', 'fee', 'adviser_id', 'refinanced_id', 'status', 'account_id'
     ];
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class);
+    }
 
     public function scopeByAccount($query, $account)
     {

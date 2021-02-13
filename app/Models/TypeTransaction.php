@@ -21,4 +21,9 @@ class TypeTransaction extends Model
     protected $hidden = [
         'deleted_at'
     ];
+
+    public function transactions()
+    {
+        return $this->hasMany(TypeTransaction::class);
+    }
 }

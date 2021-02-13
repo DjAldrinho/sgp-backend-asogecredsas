@@ -36,6 +36,7 @@ class Client extends Model
 
     protected $appends = ['sign_url'];
 
+
     public function getSignUrlAttribute()
     {
         return $this->sign ? asset('storage') . '/'. $this->sign : '';

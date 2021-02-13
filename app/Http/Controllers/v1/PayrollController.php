@@ -48,7 +48,6 @@ class PayrollController extends Controller
 
         try {
             $payroll->name = $request->name;
-            $payroll->status = $request->status;
             $payroll->save();
             $payroll->refresh();
             return response()->json(['message' => 'Payroll Updated!', 'payroll' => $payroll], 200);

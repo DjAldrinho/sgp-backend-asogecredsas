@@ -45,14 +45,12 @@ class CreditTypeController extends Controller
 
         $request->validate([
             'name' => 'required|string|unique:credit_types,name,' . $creditType->id,
-            'value' => 'integer|required',
-            'status' => 'required|string|in:A,I'
+            'value' => 'integer|required'
         ]);
 
         try {
             $creditType->name = $request->name;
             $creditType->value = $request->value;
-            $creditType->status = $request->status;
             $creditType->save();
             $creditType->refresh();
             return response()->json(['message' => 'Credit Type Updated!', 'credit_type' => $creditType], 200);
