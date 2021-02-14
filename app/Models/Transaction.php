@@ -30,6 +30,11 @@ class Transaction extends Model
         return $this->belongsTo(TypeTransaction::class);
     }
 
+    public function credit()
+    {
+        return $this->belongsTo(Credit::class);
+    }
+
     public function scopeByAccount($query, $account)
     {
         if ($account) {

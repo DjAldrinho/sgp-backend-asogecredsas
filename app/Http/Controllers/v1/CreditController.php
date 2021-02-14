@@ -13,12 +13,12 @@ class CreditController extends Controller
         $per_page = isset($request->per_page) ? $request->per_page : 50;
 
 
-        $transactions = Credit::byAccount($request->account)->byClient($request->client)
+        $transactions = Credit::with(['transactions'])->byAccount($request->account)->byClient($request->client)
             ->orderBy('created_at', 'desc')->paginate($per_page);
 
         $transactions->appends(['per_page' => $per_page]);
 
-        return response()->json(['transactions' => $transactions], 200);
+        return response()->json(['credits' => $transactions], 200);
     }
 
     public function create(Request $request)
@@ -43,7 +43,9 @@ class CreditController extends Controller
         try {
             $count = Credit::count();
 
-            $count = $count + 1;
+            $suma = $count + 1;
+
+            $count = $count < 100 ? '0' . $suma : $suma;
 
             $credit = Credit::create([
                 'code' => 'C' . time() . '-' . $count,
@@ -60,6 +62,7 @@ class CreditController extends Controller
                 'fee' => $request->fee,
                 'adviser_id' => $request->adviser_id,
                 'account_id' => $request->account_id,
+                'status' => 'P'
             ]);
 
             return response()->json(['message' => __('messages.credits.register'), 'credit' => $credit], 200);

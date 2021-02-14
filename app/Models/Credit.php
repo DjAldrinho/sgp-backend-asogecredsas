@@ -20,6 +20,11 @@ class Credit extends Model
         return $this->belongsTo(Account::class);
     }
 
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
     public function scopeByAccount($query, $account)
     {
         if ($account) {
