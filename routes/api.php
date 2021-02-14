@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\v1\AccountController;
+use App\Http\Controllers\v1\AdviserController;
 use App\Http\Controllers\v1\AuthController;
 use App\Http\Controllers\v1\ClientController;
 use App\Http\Controllers\v1\CreditController;
@@ -61,6 +62,13 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('delete/{supplier}', [SupplierController::class, 'destroy']);
     });
 
+    Route::group(['prefix' => 'advisers'], function () {
+        Route::get('all', [AdviserController::class, 'index']);
+        Route::patch('update/{adviser}', [AdviserController::class, 'update']);
+        Route::post('create', [AdviserController::class, 'create']);
+        Route::delete('delete/{adviser}', [AdviserController::class, 'destroy']);
+    });
+
     Route::group(['prefix' => 'accounts', 'middleware' => 'validate_admin'], function () {
         Route::get('all', [AccountController::class, 'index']);
         Route::get('get/{account}', [AccountController::class, 'show']);
@@ -77,6 +85,7 @@ Route::middleware('auth:api')->group(function () {
     Route::group(['prefix' => 'credits'], function () {
         Route::get('all', [CreditController::class, 'index']);
         Route::post('create', [CreditController::class, 'create']);
+        Route::post('deposit', [CreditController::class, 'deposit']);
     });
 
     Route::group(['prefix' => 'credit-types'], function () {

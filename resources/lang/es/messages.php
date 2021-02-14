@@ -42,4 +42,9 @@ return [
         'updated' => 'Tipo de Transaccion actualizada correctamente',
         'deleted' => 'Tipo de Transaccion eliminada correctamente'
     ],
+    'advisers' => [
+        'register' => 'Asesor creado correctamente',
+        'updated' => 'Asesor actualizado correctamente',
+        'deleted' => 'Asesor eliminado correctamente'
+    ],
 ];

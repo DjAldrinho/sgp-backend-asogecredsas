@@ -42,4 +42,9 @@ return [
         'updated' => 'Transaction Type successfully updated',
         'deleted' => 'Transaction Type deleted'
     ],
+    'advisers' => [
+        'register' => 'Adviser created successfully',
+        'updated' => 'Adviser successfully updated',
+        'deleted' => 'Adviser Type deleted'
+    ],
 ];
