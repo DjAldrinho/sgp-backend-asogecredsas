@@ -22,7 +22,8 @@ class PayrollController extends Controller
     public function create(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|unique:payrolls'
+            'name' => 'required|string|unique:payrolls',
+            'value' => 'integer'
         ]);
 
         try {
@@ -43,7 +44,7 @@ class PayrollController extends Controller
 
         $request->validate([
             'name' => 'required|string|unique:payrolls,name,' . $payroll->id,
-            'value' => 'integer|required'
+            'value' => 'integer'
         ]);
 
         try {

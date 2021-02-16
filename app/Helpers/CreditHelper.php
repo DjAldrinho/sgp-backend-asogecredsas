@@ -22,11 +22,15 @@ class CreditHelper
         $credit['total_credit'] = number_format($total_credit, 2, '.', ',');
         $credit['total_interest'] = number_format($total_interest, 2, '.', ',');
 
+        $interest_value = $total_interest / $fee;
+
         for ($i = 1; $i <= $fee; $i++) {
             $credit['fees'][] = [
                 'number' => $i,
                 'start_date' => $start_date->format('Y-m-d'),
-                'value_fee' => number_format($value_fee, 2, '.', ','),
+                'capital_fee' => number_format(($value_fee - $interest_value), 2, '.', ','),
+                'interest_value' => number_format($interest_value, 2, '.', ','),
+                'fee_value' => number_format($value_fee, 2, '.', ','),
                 'capital_balance' => number_format(($total_credit -= $value_fee), 2, '.', ',')
             ];
 
