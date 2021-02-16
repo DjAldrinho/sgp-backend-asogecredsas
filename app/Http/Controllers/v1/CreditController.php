@@ -134,7 +134,8 @@ class CreditController extends Controller
         $request->validate([
             'credit_id' => 'required|integer|exists:credits,id',
             'files' => 'required',
-            'files.*' => 'mimes:doc,pdf,docx,zip,jpeg,jpg,png'
+            'files.*' => 'mimes:doc,pdf,docx,zip,jpeg,jpg,png',
+            'commentary' => 'string'
         ]);
 
         try {
@@ -166,6 +167,8 @@ class CreditController extends Controller
                     StoreTransaction::dispatchSync($account->id, 'commission', -abs($total_commission), '
                     Comision de ' . $credit->commission . '%', 2, 4, $credit->id);
                 }
+
+                $credit->commentary = $request->commentary;
 
                 $credit->save();
                 $credit->documents()->saveMany($documents);
