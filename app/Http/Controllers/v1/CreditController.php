@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Helpers\CreditHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Account;
 use App\Models\Credit;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class CreditController extends Controller
 {
@@ -38,6 +41,7 @@ class CreditController extends Controller
             'fee' => 'required|integer',
             'adviser_id' => 'integer|exists:advisers,id',
             'account_id' => 'required|integer|exists:accounts,id',
+            'start_date' => 'required|date'
         ]);
 
         try {
@@ -46,6 +50,18 @@ class CreditController extends Controller
             $suma = $count + 1;
 
             $count = $count < 100 ? '0' . $suma : $suma;
+
+            $account = Account::find($request->account_id);
+
+            if ($account->value <= 0) {
+
+                $account = Account::firstWhere('id', '!=', $account->id);
+
+                if (!$account || $account->value <= 0) {
+                    return response()->json(['message' => 'No tiene saldo en ninguna de sus cuentas']);
+                }
+            }
+
 
             $credit = Credit::create([
                 'code' => 'C' . time() . '-' . $count,
@@ -61,8 +77,9 @@ class CreditController extends Controller
                 'commission' => $request->commission,
                 'fee' => $request->fee,
                 'adviser_id' => $request->adviser_id,
-                'account_id' => $request->account_id,
-                'status' => 'P'
+                'account_id' => $account->id,
+                'status' => 'P',
+                "start_date" => $request->start_date
             ]);
 
             return response()->json(['message' => __('messages.credits.register'), 'credit' => $credit], 200);
@@ -77,5 +94,33 @@ class CreditController extends Controller
         $request->validate([
             'credit_id' => 'required|integer|exists:credits,id'
         ]);
+    }
+
+    public function liquidate(Request $request)
+    {
+        $request->validate([
+            "interest" => 'required',
+            "other_value" => 'numeric',
+            "transport_value" => 'numeric',
+            "capital_value" => 'required|numeric',
+            "fee" => 'required|numeric|max:72',
+            "start_date" => 'required|date'
+        ]);
+
+        try {
+
+            $data = [
+                "interest" => $request->interest,
+                "other_value" => $request->other_value,
+                "transport_value" => $request->transport_value,
+                "capital_value" => $request->capital_value,
+                "fee" => $request->fee,
+                "start_date" => $request->start_date
+            ];
+
+            return CreditHelper::liquidate($data);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
     }
 }

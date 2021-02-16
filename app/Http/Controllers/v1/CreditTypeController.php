@@ -23,7 +23,7 @@ class CreditTypeController extends Controller
     {
         $request->validate([
             'name' => 'required|string|unique:credit_types',
-            'value' => 'integer|required'
+            'value' => 'integer'
         ]);
 
         try {
@@ -45,7 +45,7 @@ class CreditTypeController extends Controller
 
         $request->validate([
             'name' => 'required|string|unique:credit_types,name,' . $creditType->id,
-            'value' => 'integer|required'
+            'value' => 'integer'
         ]);
 
         try {

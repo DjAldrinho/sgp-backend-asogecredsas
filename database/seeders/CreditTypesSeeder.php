@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\CreditType;
 use Exception;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class CreditTypesSeeder extends Seeder
 {
@@ -21,13 +20,13 @@ class CreditTypesSeeder extends Seeder
             "libranza", "credito personal",
             "prima junio", "prima diciembre",
             "[no] personal", "cesantias",
-            "pignoración", "credito por ventanilla"
+            "pignoración", "credito por ventanilla",
+            'No Aplica'
         ];
 
         foreach ($credit_types as $key => $credit_type) {
             CreditType::create([
-                'name' => $credit_type,
-                'value' => random_int(0, 10)
+                'name' => $credit_type
             ]);
         }
     }
