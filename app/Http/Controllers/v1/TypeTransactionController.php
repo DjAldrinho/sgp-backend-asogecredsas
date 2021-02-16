@@ -11,7 +11,14 @@ class TypeTransactionController extends Controller
 {
     public function index()
     {
-        return response()->json(['types' => TypeTransaction::all()], 200);
+
+        $per_page = isset($request->per_page) ? $request->per_page : 50;
+
+        $types = TypeTransaction::paginate($per_page);
+
+        $types->appends(['per_page' => $per_page]);
+
+        return response()->json(['types' => $types], 200);
     }
 
 

@@ -106,9 +106,9 @@ Route::middleware('auth:api')->group(function () {
 
     Route::group(['prefix' => 'type-transaction'], function () {
         Route::get('all', [TypeTransactionController::class, 'index']);
-        Route::patch('update/{type}', [TypeTransactionController::class, 'update']);
+        Route::patch('update/{typeTransaction}', [TypeTransactionController::class, 'update']);
         Route::post('create', [TypeTransactionController::class, 'create']);
-        Route::delete('delete/{type}', [TypeTransactionController::class, 'destroy']);
+        Route::delete('delete/{typeTransaction}', [TypeTransactionController::class, 'destroy']);
     });
 });
 
