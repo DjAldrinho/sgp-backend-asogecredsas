@@ -84,7 +84,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::group(['prefix' => 'credits'], function () {
         Route::get('all', [CreditController::class, 'index']);
-        Route::get('liquidate', [CreditController::class, 'liquidate']);
+        Route::post('liquidate', [CreditController::class, 'liquidate']);
         Route::post('approve', [CreditController::class, 'approve']);
         Route::post('create', [CreditController::class, 'create']);
         Route::post('deposit', [CreditController::class, 'deposit']);
