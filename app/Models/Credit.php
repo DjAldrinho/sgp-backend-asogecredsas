@@ -13,7 +13,7 @@ class Credit extends Model
     protected $fillable = [
         'code', 'payroll_id', 'credit_type_id', 'debtor_id', 'first_co_debtor', 'second_co_debtor',
         'start_date', 'refinanced', 'capital_value', 'transport_value', 'other_value', 'interest',
-        'commission', 'fee', 'adviser_id', 'refinanced_id', 'status', 'account_id'
+        'commission', 'fee', 'adviser_id', 'refinanced_id', 'status', 'account_id', 'commentary'
     ];
 
     protected $appends = ['liquidate'];
@@ -26,6 +26,11 @@ class Credit extends Model
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(CreditDocument::class);
     }
 
     public function scopeByAccount($query, $account)

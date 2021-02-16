@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\v1;
 
 use App\Helpers\CreditHelper;
+use App\Helpers\FileManager;
 use App\Http\Controllers\Controller;
+use App\Jobs\StoreTransaction;
 use App\Models\Account;
 use App\Models\Credit;
+use App\Models\CreditDocument;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -37,7 +40,7 @@ class CreditController extends Controller
             'transport_value' => 'numeric',
             'other_value' => 'numeric',
             'interest' => 'required|numeric',
-            'commission' => 'numeric',
+            'commission' => 'required_with:adviser_id|numeric',
             'fee' => 'required|integer',
             'adviser_id' => 'integer|exists:advisers,id',
             'account_id' => 'required|integer|exists:accounts,id',
@@ -89,6 +92,7 @@ class CreditController extends Controller
         }
     }
 
+    //Abonos WIP
     public function deposit(Request $request)
     {
         $request->validate([
@@ -121,6 +125,61 @@ class CreditController extends Controller
             return CreditHelper::liquidate($data);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function approve(Request $request)
+    {
+
+        $request->validate([
+            'credit_id' => 'required|integer|exists:credits,id',
+            'files' => 'required',
+            'files.*' => 'mimes:doc,pdf,docx,zip,jpeg,jpg,png'
+        ]);
+
+        try {
+
+            $documents = [];
+
+            $credit = Credit::find($request->credit_id);
+
+            if ($credit->status == 'P') {
+                $total = $credit->capital_value + $credit->transport_value + $credit->other_value;
+
+
+                $account = Account::find($credit->account_id);
+                $credit->status = 'A';
+
+                if ($request->hasFile('files')) {
+                    foreach ($request->file('files') as $key => $file) {
+                        $documents[$key] = new CreditDocument(['document_file' => FileManager::uploadPublicFiles($file, 'documents_credits')]);
+                    }
+                }
+
+
+                if ($credit->commission) {
+                    $total_commission = ($total / ($credit->commission / 100));
+                    $account->old_value = $account->value;
+                    $account->value = $account->value - $total_commission;
+                    $account->save();
+                    $account->refresh();
+                    StoreTransaction::dispatchSync($account->id, 'commission', -abs($total_commission), '
+                    Comision de ' . $credit->commission . '%', 2, 4, $credit->id);
+                }
+
+                $credit->save();
+                $credit->documents()->saveMany($documents);
+                $credit->refresh();
+
+                StoreTransaction::dispatchSync($account->id, 'credit', -abs($credit->capital_value),
+                    'Desembolso de Credito', 3, $credit->credit_type_id, $credit->id);
+
+                return response()->json(['message' => 'Credito aprobado correctamente', 'credit' => $credit], Response::HTTP_OK);
+            } else {
+                return response()->json(['message' => 'Su credito ya se encuentra aprobado'], Response::HTTP_MULTI_STATUS);
+            }
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage(), 'line' => $exception->getLine()], Response::HTTP_BAD_REQUEST);
         }
     }
 }

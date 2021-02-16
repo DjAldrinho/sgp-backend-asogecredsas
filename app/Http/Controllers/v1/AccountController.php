@@ -87,7 +87,7 @@ class AccountController extends Controller
             $account->save();
             $account->refresh();
 
-            StoreTransaction::dispatchSync($account->id, $request->type, $account->value,
+            StoreTransaction::dispatchSync($account->id, $request->type, $amount,
                 $request->commentary, $request->supplier_id, $request->type_transaction);
 
             return response()->json(['message' => ucfirst($request->type) . ' generado!', 'account' => $account], 200);

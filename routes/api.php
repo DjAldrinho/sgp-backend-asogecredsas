@@ -36,7 +36,7 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::middleware('auth:api')->group(function () {
 
-    Route::group(['prefix' => 'clients',  'middleware' => 'validate_admin'], function () {
+    Route::group(['prefix' => 'clients', 'middleware' => 'validate_admin'], function () {
         Route::get('all', [ClientController::class, 'index']);
         Route::get('info/{client}', [ClientController::class, 'show']);
         Route::get('search/types', [ClientController::class, 'getByType']);
@@ -85,6 +85,7 @@ Route::middleware('auth:api')->group(function () {
     Route::group(['prefix' => 'credits'], function () {
         Route::get('all', [CreditController::class, 'index']);
         Route::get('liquidate', [CreditController::class, 'liquidate']);
+        Route::post('approve', [CreditController::class, 'approve']);
         Route::post('create', [CreditController::class, 'create']);
         Route::post('deposit', [CreditController::class, 'deposit']);
     });
