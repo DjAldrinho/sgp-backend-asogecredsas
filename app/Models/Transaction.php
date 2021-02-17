@@ -25,6 +25,11 @@ class Transaction extends Model
         return $this->belongsTo(Account::class);
     }
 
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
     public function type_transaction()
     {
         return $this->belongsTo(TypeTransaction::class);
@@ -33,6 +38,11 @@ class Transaction extends Model
     public function credit()
     {
         return $this->belongsTo(Credit::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function scopeByAccount($query, $account)

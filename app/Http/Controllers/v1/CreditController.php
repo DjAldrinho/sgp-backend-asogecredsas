@@ -67,6 +67,19 @@ class CreditController extends Controller
             }
 
 
+            $data = [
+                "interest" => $request->interest,
+                "other_value" => $request->other_value,
+                "transport_value" => $request->transport_value,
+                "capital_value" => $request->capital_value,
+                "fee" => $request->fee,
+                "start_date" => $request->start_date
+            ];
+
+
+            $total_credit = CreditHelper::liquidate($data, false);
+
+
             $credit = Credit::create([
                 'code' => 'C' . time() . '-' . $count,
                 'payroll_id' => $request->payroll_id,
@@ -83,8 +96,10 @@ class CreditController extends Controller
                 'adviser_id' => $request->adviser_id,
                 'account_id' => $account->id,
                 'status' => 'P',
-                "start_date" => $request->start_date
+                "start_date" => $request->start_date,
+                'payment' => $total_credit
             ]);
+
 
             return response()->json(['message' => __('messages.credits.register'), 'credit' => $credit], 200);
 
@@ -93,12 +108,41 @@ class CreditController extends Controller
         }
     }
 
-    //Abonos WIP
     public function deposit(Request $request)
     {
         $request->validate([
-            'credit_id' => 'required|integer|exists:credits,id'
+            'credit_id' => 'required|integer|exists:credits,id',
+            'value' => 'required|numeric'
         ]);
+
+        try {
+
+            $credit = Credit::find($request->credit_id);
+
+            if ($credit->payment > 0) {
+                $credit->payment = $credit->payment - $request->value;
+                if ($credit->payment <= 0) {
+                    $credit->status = 'F';
+                }
+                $credit->save();
+                $credit->refresh();
+
+                AccountService::updateAccount($credit->account, $request->value, 'add');
+                StoreTransaction::dispatchSync($credit->account->id, 'credit_payment', $request->value,
+                    'Abono de credito #' . $credit->code, 3, 4, $credit->id);
+
+                return response()->json(['message' => 'Valor abonado al credito #' . $credit->code . ' saldo restante: ' . $credit->payment,
+                    'credit' => $credit]);
+            } else {
+                $credit->status = 'F';
+                $credit->save();
+                $credit->refresh();
+                return response()->json(['message' => 'No se puede abonar a un credito condonado']);
+            }
+
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()]);
+        }
     }
 
     public function liquidate(Request $request)

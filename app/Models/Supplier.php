@@ -19,6 +19,11 @@ class Supplier extends Model
         'deleted_at'
     ];
 
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
     public function setOldValueAttribute($value)
     {
         $this->attributes['old_value'] = $this->value;

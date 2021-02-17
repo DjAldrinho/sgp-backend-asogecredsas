@@ -13,7 +13,7 @@ class Credit extends Model
     protected $fillable = [
         'code', 'payroll_id', 'credit_type_id', 'debtor_id', 'first_co_debtor', 'second_co_debtor',
         'start_date', 'refinanced', 'capital_value', 'transport_value', 'other_value', 'interest',
-        'commission', 'fee', 'adviser_id', 'refinanced_id', 'status', 'account_id', 'commentary'
+        'commission', 'fee', 'adviser_id', 'refinanced_id', 'status', 'account_id', 'commentary', 'payment'
     ];
 
     protected $appends = ['liquidate'];
@@ -46,6 +46,26 @@ class Credit extends Model
     public function second_co_debtor()
     {
         return $this->belongsTo(Client::class);
+    }
+
+    public function adviser()
+    {
+        return $this->belongsTo(Adviser::class);
+    }
+
+    public function refinanced()
+    {
+        return $this->belongsTo(Credit::class);
+    }
+
+    public function credit_type()
+    {
+        return $this->belongsTo(CreditType::class);
+    }
+
+    public function payroll()
+    {
+        return $this->belongsTo(Payroll::class);
     }
 
 

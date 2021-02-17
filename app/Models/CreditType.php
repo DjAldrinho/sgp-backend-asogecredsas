@@ -13,4 +13,9 @@ class CreditType extends Model
     protected $fillable = ['name', 'value', 'status'];
 
     protected $hidden = ['deleted_at '];
+
+    public function credits()
+    {
+        return $this->hasMany(Credit::class);
+    }
 }

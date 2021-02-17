@@ -12,6 +12,10 @@ class Adviser extends Model
 
     protected $fillable = ['name', 'phone', 'status'];
 
-
     protected $hidden = ['deleted_at'];
+
+    public function credits()
+    {
+        return $this->hasMany(Credit::class);
+    }
 }
