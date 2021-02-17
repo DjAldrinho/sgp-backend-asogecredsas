@@ -5,6 +5,7 @@ namespace App\Http\Controllers\v1;
 use App\Http\Controllers\Controller;
 use App\Jobs\StoreTransaction;
 use App\Models\Account;
+use App\Services\AccountService;
 use Illuminate\Http\Request;
 
 class AccountController extends Controller
@@ -81,12 +82,7 @@ class AccountController extends Controller
                 $amount = -abs($amount);
             }
 
-            $account_value = $account->value;
-            $account->old_value = $account_value;
-            $account->value = $account_value + $amount;
-            $account->save();
-            $account->refresh();
-
+            AccountService::updateAccount($account, $amount, 'add');
             StoreTransaction::dispatchSync($account->id, $request->type, $amount,
                 $request->commentary, $request->supplier_id, $request->type_transaction);
 

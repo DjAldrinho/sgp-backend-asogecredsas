@@ -33,6 +33,22 @@ class Credit extends Model
         return $this->hasMany(CreditDocument::class);
     }
 
+    public function debtor()
+    {
+        return $this->belongsTo(Client::class);
+    }
+
+    public function co_debtor()
+    {
+        return $this->belongsTo(Client::class);
+    }
+
+    public function second_co_debtor()
+    {
+        return $this->belongsTo(Client::class);
+    }
+
+
     public function scopeByAccount($query, $account)
     {
         if ($account) {

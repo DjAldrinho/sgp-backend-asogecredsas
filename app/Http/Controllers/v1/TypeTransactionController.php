@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class TypeTransactionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
 
         $per_page = isset($request->per_page) ? $request->per_page : 50;

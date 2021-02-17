@@ -9,6 +9,7 @@ use App\Jobs\StoreTransaction;
 use App\Models\Account;
 use App\Models\Credit;
 use App\Models\CreditDocument;
+use App\Services\AccountService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -159,13 +160,10 @@ class CreditController extends Controller
 
 
                 if ($credit->commission) {
-                    $total_commission = ($total / ($credit->commission / 100));
-                    $account->old_value = $account->value;
-                    $account->value = $account->value - $total_commission;
-                    $account->save();
-                    $account->refresh();
-                    StoreTransaction::dispatchSync($account->id, 'commission', -abs($total_commission), '
-                    Comision de ' . $credit->commission . '%', 2, 4, $credit->id);
+                    $total_commission = ($total * ($credit->commission / 100));
+                    AccountService::updateAccount($account, $total_commission, 'sub');
+                    StoreTransaction::dispatchSync($account->id, 'commission', -abs($total_commission),
+                        'Comision de ' . $credit->commission . '%', 2, 4, $credit->id);
                 }
 
                 $credit->commentary = $request->commentary;
@@ -174,8 +172,11 @@ class CreditController extends Controller
                 $credit->documents()->saveMany($documents);
                 $credit->refresh();
 
+                AccountService::updateAccount($account, $credit->capital_value, 'sub');
+
                 StoreTransaction::dispatchSync($account->id, 'credit', -abs($credit->capital_value),
                     'Desembolso de Credito', 3, $credit->credit_type_id, $credit->id);
+
 
                 return response()->json(['message' => 'Credito aprobado correctamente', 'credit' => $credit], Response::HTTP_OK);
             } else {

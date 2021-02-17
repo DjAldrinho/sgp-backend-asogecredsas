@@ -41,22 +41,27 @@ class StoreTransaction implements ShouldQueue
      */
     public function handle()
     {
-        Log::info('Saving transactions!');
+        try {
+            Log::info('Saving transactions!');
 
-        $count = Transaction::count();
+            $count = Transaction::count();
 
-        $count = $count + 1;
+            $count = $count + 1;
 
-        Transaction::create([
-            'origin' => $this->origin,
-            'code' => 'T' . time() . '-' . $count,
-            'value' => $this->amount,
-            'supplier_id' => $this->supplier_id,
-            'account_id' => $this->account_id,
-            'type_transaction_id' => $this->type_transaction_id,
-            'commentary' => $this->commentary,
-            'user_id' => Auth::id(),
-            'credit_id' => $this->credit_id
-        ]);
+            Transaction::create([
+                'origin' => $this->origin,
+                'code' => 'T' . time() . '-' . $count,
+                'value' => $this->amount,
+                'supplier_id' => $this->supplier_id,
+                'account_id' => $this->account_id,
+                'type_transaction_id' => $this->type_transaction_id,
+                'commentary' => $this->commentary,
+                'user_id' => Auth::id(),
+                'credit_id' => $this->credit_id
+            ]);
+
+        } catch (\Exception $exception) {
+            Log::error('Store transaction: ' . $exception->getMessage());
+        }
     }
 }

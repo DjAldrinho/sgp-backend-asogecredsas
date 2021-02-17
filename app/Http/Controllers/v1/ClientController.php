@@ -22,7 +22,7 @@ class ClientController extends Controller
 
         $per_page = isset($request->per_page) ? $request->per_page : 50;
 
-        $clients = Client::paginate($per_page);
+        $clients = Client::byDocument($request->document)->byName($request->name)->paginate($per_page);
 
         $clients->appends(['per_page' => $per_page]);
 

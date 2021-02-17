@@ -44,11 +44,14 @@ class PayrollController extends Controller
 
         $request->validate([
             'name' => 'required|string|unique:payrolls,name,' . $payroll->id,
-            'value' => 'integer'
+            'value' => 'integer',
+            'status' => 'in:A,I'
         ]);
 
         try {
             $payroll->name = $request->name;
+            $payroll->value = $request->value;
+            $payroll->status = $request->status;
             $payroll->save();
             $payroll->refresh();
             return response()->json(['message' => __('messages.payrolls.updated'), 'payroll' => $payroll], 200);

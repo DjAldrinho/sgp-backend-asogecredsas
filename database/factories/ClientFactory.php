@@ -28,7 +28,7 @@ class ClientFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'phone' => $this->faker->phoneNumber,
             'document_type' => $this->faker->randomElement(['cc', 'ce', 'tc', 'pp']),
-            'document_number' => $this->faker->unique()->numberBetween(102345678, 196325874),
+            'document_number' => $this->faker->unique()->numberBetween(100000, 9000000000),
             'sign' => $this->faker->imageUrl(300, 200),
             'client_type' => $this->faker->randomElement([json_encode(['debtor']), json_encode(['debtor', 'co_debtor'])])
         ];

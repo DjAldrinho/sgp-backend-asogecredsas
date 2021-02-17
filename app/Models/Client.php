@@ -39,6 +39,25 @@ class Client extends Model
 
     public function getSignUrlAttribute()
     {
-        return $this->sign ? asset('storage') . '/'. $this->sign : '';
+        return $this->sign ? asset('storage') . '/' . $this->sign : '';
+    }
+
+    public function credits()
+    {
+        return $this->hasMany(Credit::class);
+    }
+
+    public function scopeByName($query, $name)
+    {
+        if ($name) {
+            return $query->where('name', 'ilike', '%' . $name . '%');
+        }
+    }
+
+    public function scopeByDocument($query, $document)
+    {
+        if ($document) {
+            return $query->where('document_number', 'like', '%' . $document . '%');
+        }
     }
 }
