@@ -13,7 +13,7 @@ class AdviserController extends Controller
 
         $per_page = isset($request->per_page) ? $request->per_page : 50;
 
-        $advisers = Adviser::paginate($per_page);
+        $advisers = Adviser::byNameOrPhone($request->search)->paginate($per_page);
 
         $advisers->appends(['per_page' => $per_page]);
 

@@ -18,4 +18,11 @@ class Adviser extends Model
     {
         return $this->hasMany(Credit::class);
     }
+
+    public function scopeByNameOrPhone($query, $value)
+    {
+        if ($value) {
+            return $query->where('phone', 'like', '%' . $value . '%')->orWhere('name', 'ilike', '%' . $value . '%');
+        }
+    }
 }

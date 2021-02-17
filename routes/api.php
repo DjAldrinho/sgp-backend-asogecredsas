@@ -39,7 +39,6 @@ Route::middleware('auth:api')->group(function () {
     Route::group(['prefix' => 'clients', 'middleware' => 'validate_admin'], function () {
         Route::get('all', [ClientController::class, 'index']);
         Route::get('info/{client}', [ClientController::class, 'show']);
-        Route::get('search/types', [ClientController::class, 'getByType']);
         Route::get('template', [ClientController::class, 'getTemplate']);
         Route::patch('update/{client}', [ClientController::class, 'update']);
         Route::post('create', [ClientController::class, 'create']);
@@ -84,6 +83,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::group(['prefix' => 'credits'], function () {
         Route::get('all', [CreditController::class, 'index']);
+        Route::get('info/{credit}', [CreditController::class, 'show']);
         Route::post('liquidate', [CreditController::class, 'liquidate']);
         Route::post('approve', [CreditController::class, 'approve']);
         Route::post('create', [CreditController::class, 'create']);

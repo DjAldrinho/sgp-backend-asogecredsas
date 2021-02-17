@@ -25,6 +25,6 @@ class CreditDocument extends Model
 
     public function getDocumentFileUrlAttribute()
     {
-        return $this->professional_card ? asset('documents_credits') . '/'. $this->document_file : '';
+        return $this->document_file ? asset('storage') . '/'. $this->document_file : '';
     }
 }

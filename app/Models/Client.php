@@ -60,4 +60,11 @@ class Client extends Model
             return $query->where('document_number', 'like', '%' . $document . '%');
         }
     }
+
+    public function scopeByNameOrDocument($query, $value)
+    {
+        if ($value) {
+            return $query->where('document_number', 'like', '%' . $value . '%')->orWhere('name', 'ilike', '%' . $value . '%');
+        }
+    }
 }

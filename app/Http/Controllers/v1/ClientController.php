@@ -22,31 +22,11 @@ class ClientController extends Controller
 
         $per_page = isset($request->per_page) ? $request->per_page : 50;
 
-        $clients = Client::byDocument($request->document)->byName($request->name)->paginate($per_page);
+        $clients = Client::byNameOrDocument($request->search)->paginate($per_page);
 
         $clients->appends(['per_page' => $per_page]);
 
         return response()->json(['clients' => $clients], 200);
-    }
-
-    public function getByType(Request $request)
-    {
-        $request->validate([
-            'types' => 'required|string'
-        ]);
-
-        try {
-
-            $types = explode(',', $request->types);
-
-            $clients = Client::whereJsonContains('client_type', $types)->paginate(50);
-
-            $clients->appends(['types' => $request->types]);
-
-            return response()->json(['clients' => $clients]);
-        } catch (\Exception $exception) {
-            return response(['message' => $exception->getMessage()], 409);
-        }
     }
 
     /**

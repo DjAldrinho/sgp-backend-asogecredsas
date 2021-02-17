@@ -7,6 +7,7 @@ use App\Helpers\FileManager;
 use App\Http\Controllers\Controller;
 use App\Jobs\StoreTransaction;
 use App\Models\Account;
+use App\Models\Client;
 use App\Models\Credit;
 use App\Models\CreditDocument;
 use App\Services\AccountService;
@@ -20,12 +21,30 @@ class CreditController extends Controller
         $per_page = isset($request->per_page) ? $request->per_page : 50;
 
 
-        $transactions = Credit::with(['transactions'])->byAccount($request->account)->byClient($request->client)
+        $transactions = Credit::with(
+            [
+                'transactions', 'account', 'documents', 'debtor', 'co_debtor', 'second_co_debtor', 'adviser',
+                'refinanced', 'credit_type', 'payroll'
+            ])
+            ->byAccount($request->account)->byClient($request->client)
             ->orderBy('created_at', 'desc')->paginate($per_page);
 
         $transactions->appends(['per_page' => $per_page]);
 
         return response()->json(['credits' => $transactions], 200);
+    }
+
+    public function show(Credit $credit)
+    {
+
+
+        $credit = Credit::with(
+            [
+                'transactions', 'account', 'documents', 'debtor', 'co_debtor', 'second_co_debtor', 'adviser',
+                'refinanced', 'credit_type', 'payroll'
+            ])->where('id', $credit->id)->firstOrFail();
+
+        return response()->json(['credit' => $credit]);
     }
 
     public function create(Request $request)
@@ -131,13 +150,16 @@ class CreditController extends Controller
                 StoreTransaction::dispatchSync($credit->account->id, 'credit_payment', $request->value,
                     'Abono de credito #' . $credit->code, 3, 4, $credit->id);
 
-                return response()->json(['message' => 'Valor abonado al credito #' . $credit->code . ' saldo restante: ' . $credit->payment,
+
+                $payment = number_format(($credit->payment), 2, '.', ',');
+
+                return response()->json(['message' => 'Valor abonado al credito #' . $credit->code . ' saldo restante: ' . $payment,
                     'credit' => $credit]);
             } else {
                 $credit->status = 'F';
                 $credit->save();
                 $credit->refresh();
-                return response()->json(['message' => 'No se puede abonar a un credito condonado']);
+                return response()->json(['message' => 'No se puede abonar a un credito finalizado']);
             }
 
         } catch (\Exception $exception) {
@@ -167,7 +189,7 @@ class CreditController extends Controller
                 "start_date" => $request->start_date
             ];
 
-            return CreditHelper::liquidate($data);
+            return response()->json(['liquidate' => CreditHelper::liquidate($data)]);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
         }
