@@ -18,6 +18,10 @@ class Credit extends Model
 
     protected $appends = ['liquidate'];
 
+    protected $casts = [
+        'payment' => 'decimal:2'
+    ];
+
     public function account()
     {
         return $this->belongsTo(Account::class);
@@ -35,17 +39,17 @@ class Credit extends Model
 
     public function debtor()
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(Client::class, 'debtor_id');
     }
 
-    public function co_debtor()
+    public function first_co_debtor()
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(Client::class, 'first_co_debtor');
     }
 
     public function second_co_debtor()
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(Client::class, 'second_co_debtor');
     }
 
     public function adviser()
@@ -55,7 +59,7 @@ class Credit extends Model
 
     public function refinanced()
     {
-        return $this->belongsTo(Credit::class);
+        return $this->belongsTo(Credit::class, 'refinanced_id');
     }
 
     public function credit_type()

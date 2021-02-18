@@ -88,6 +88,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('approve', [CreditController::class, 'approve']);
         Route::post('create', [CreditController::class, 'create']);
         Route::post('deposit', [CreditController::class, 'deposit']);
+        Route::post('refinance', [CreditController::class, 'refinance']);
     });
 
     Route::group(['prefix' => 'credit-types'], function () {

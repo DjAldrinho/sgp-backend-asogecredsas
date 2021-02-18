@@ -7,7 +7,6 @@ use App\Helpers\FileManager;
 use App\Http\Controllers\Controller;
 use App\Jobs\StoreTransaction;
 use App\Models\Account;
-use App\Models\Client;
 use App\Models\Credit;
 use App\Models\CreditDocument;
 use App\Services\AccountService;
@@ -16,6 +15,7 @@ use Illuminate\Http\Response;
 
 class CreditController extends Controller
 {
+
     public function index(Request $request)
     {
         $per_page = isset($request->per_page) ? $request->per_page : 50;
@@ -23,10 +23,9 @@ class CreditController extends Controller
 
         $transactions = Credit::with(
             [
-                'transactions', 'account', 'documents', 'debtor', 'co_debtor', 'second_co_debtor', 'adviser',
+                'transactions', 'account', 'documents', 'debtor', 'first_co_debtor', 'second_co_debtor', 'adviser',
                 'refinanced', 'credit_type', 'payroll'
-            ])
-            ->byAccount($request->account)->byClient($request->client)
+            ])->byAccount($request->account)->byClient($request->client)
             ->orderBy('created_at', 'desc')->paginate($per_page);
 
         $transactions->appends(['per_page' => $per_page]);
@@ -40,7 +39,7 @@ class CreditController extends Controller
 
         $credit = Credit::with(
             [
-                'transactions', 'account', 'documents', 'debtor', 'co_debtor', 'second_co_debtor', 'adviser',
+                'transactions', 'account', 'documents', 'debtor', 'first_co_debtor', 'second_co_debtor', 'adviser',
                 'refinanced', 'credit_type', 'payroll'
             ])->where('id', $credit->id)->firstOrFail();
 
@@ -68,59 +67,51 @@ class CreditController extends Controller
         ]);
 
         try {
-            $count = Credit::count();
-
-            $suma = $count + 1;
-
-            $count = $count < 100 ? '0' . $suma : $suma;
 
             $account = Account::find($request->account_id);
 
-            if ($account->value <= 0) {
+            if ($account && $account->value > 0) {
 
-                $account = Account::firstWhere('id', '!=', $account->id);
+                $count = Credit::count() + 1;
 
-                if (!$account || $account->value <= 0) {
-                    return response()->json(['message' => 'No tiene saldo en ninguna de sus cuentas']);
-                }
+                $data = [
+                    "interest" => $request->interest,
+                    "other_value" => $request->other_value,
+                    "transport_value" => $request->transport_value,
+                    "capital_value" => $request->capital_value,
+                    "fee" => $request->fee,
+                    "start_date" => $request->start_date
+                ];
+
+
+                $total_credit = CreditHelper::liquidate($data, false);
+
+
+                $credit = Credit::create([
+                    'code' => 'C' . time() . '-' . $count,
+                    'payroll_id' => $request->payroll_id,
+                    'credit_type_id' => $request->credit_type_id,
+                    'debtor_id' => $request->debtor_id,
+                    'first_co_debtor' => $request->first_co_debtor,
+                    'second_co_debtor' => $request->second_co_debtor,
+                    'capital_value' => $request->capital_value,
+                    'transport_value' => $request->transport_value,
+                    'other_value' => $request->other_value,
+                    'interest' => $request->interest,
+                    'commission' => $request->commission,
+                    'fee' => $request->fee,
+                    'adviser_id' => $request->adviser_id,
+                    'account_id' => $account->id,
+                    'status' => 'P',
+                    "start_date" => $request->start_date,
+                    'payment' => $total_credit
+                ]);
+
+
+                return response()->json(['message' => __('messages.credits.register'), 'credit' => $credit], 200);
+            } else {
+                return response()->json(['message' => 'No tiene saldo en la cuenta #' . $account->id . ' - ' . $account->name]);
             }
-
-
-            $data = [
-                "interest" => $request->interest,
-                "other_value" => $request->other_value,
-                "transport_value" => $request->transport_value,
-                "capital_value" => $request->capital_value,
-                "fee" => $request->fee,
-                "start_date" => $request->start_date
-            ];
-
-
-            $total_credit = CreditHelper::liquidate($data, false);
-
-
-            $credit = Credit::create([
-                'code' => 'C' . time() . '-' . $count,
-                'payroll_id' => $request->payroll_id,
-                'credit_type_id' => $request->credit_type_id,
-                'debtor_id' => $request->debtor_id,
-                'first_co_debtor' => $request->first_co_debtor,
-                'second_co_debtor' => $request->second_co_debtor,
-                'capital_value' => $request->capital_value,
-                'transport_value' => $request->transport_value,
-                'other_value' => $request->other_value,
-                'interest' => $request->interest,
-                'commission' => $request->commission,
-                'fee' => $request->fee,
-                'adviser_id' => $request->adviser_id,
-                'account_id' => $account->id,
-                'status' => 'P',
-                "start_date" => $request->start_date,
-                'payment' => $total_credit
-            ]);
-
-
-            return response()->json(['message' => __('messages.credits.register'), 'credit' => $credit], 200);
 
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
@@ -210,43 +201,126 @@ class CreditController extends Controller
             $documents = [];
 
             $credit = Credit::find($request->credit_id);
+            $account = Account::find($credit->account_id);
 
-            if ($credit->status == 'P') {
-                $total = $credit->capital_value + $credit->transport_value + $credit->other_value;
+            if ($account && $account->value > 0) {
+                if ($credit->status == 'P') {
+                    $total = $credit->capital_value + $credit->transport_value + $credit->other_value;
 
+
+                    $credit->status = 'A';
+
+                    if ($request->hasFile('files')) {
+                        foreach ($request->file('files') as $key => $file) {
+                            $documents[$key] = new CreditDocument(['document_file' => FileManager::uploadPublicFiles($file, 'documents_credits')]);
+                        }
+                    }
+
+
+                    if ($credit->commission) {
+                        $total_commission = ($total * ($credit->commission / 100));
+                        AccountService::updateAccount($account, $total_commission, 'sub');
+                        StoreTransaction::dispatchSync($account->id, 'commission', -abs($total_commission),
+                            'Comision de ' . $credit->commission . '%', 2, 4, $credit->id);
+                    }
+
+                    $credit->commentary = $request->commentary;
+
+                    $credit->save();
+                    $credit->documents()->saveMany($documents);
+                    $credit->refresh();
+
+                    AccountService::updateAccount($account, $credit->capital_value, 'sub');
+
+                    StoreTransaction::dispatchSync($account->id, 'credit', -abs($credit->capital_value),
+                        'Desembolso de Credito', 3, $credit->credit_type_id, $credit->id);
+
+
+                    return response()->json(['message' => 'Credito aprobado correctamente', 'credit' => $credit], Response::HTTP_OK);
+                } else {
+                    return response()->json(['message' => 'Su credito ya se encuentra aprobado'], Response::HTTP_MULTI_STATUS);
+                }
+            } else {
+                return response()->json(['message' => 'No tiene saldo en la cuenta #' . $account->id . ' - ' . $account->name]);
+            }
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage(), 'line' => $exception->getLine()], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function refinance(Request $request)
+    {
+        $request->validate([
+            'credit_id' => 'required|integer|exists:credits,id',
+            'capital_value' => 'required|numeric',
+            'transport_value' => 'numeric',
+            'fee' => 'integer'
+        ]);
+
+        try {
+
+            $credit = Credit::find($request->credit_id);
+
+
+            if ($credit->status == 'A') {
 
                 $account = Account::find($credit->account_id);
-                $credit->status = 'A';
 
-                if ($request->hasFile('files')) {
-                    foreach ($request->file('files') as $key => $file) {
-                        $documents[$key] = new CreditDocument(['document_file' => FileManager::uploadPublicFiles($file, 'documents_credits')]);
-                    }
+                if ($account && $account->value > 0) {
+
+                    $count = Credit::count() + 1;
+
+                    $fee = $request->fee ? $request->fee : $credit->fee;
+
+                    $date = date('Y-m-d');
+
+                    $data = [
+                        "interest" => $credit->interest,
+                        "other_value" => $credit->payment,
+                        "transport_value" => $request->transport_value,
+                        "capital_value" => $request->capital_value,
+                        "fee" => $fee,
+                        "start_date" => $date
+                    ];
+
+                    $total_credit = CreditHelper::liquidate($data, false);
+
+                    $new_credit = Credit::create([
+                        'code' => 'C' . time() . '-' . $count,
+                        'payroll_id' => $credit->payroll_id,
+                        'credit_type_id' => $credit->credit_type_id,
+                        'debtor_id' => $credit->debtor_id,
+                        'first_co_debtor' => $credit->first_co_debtor,
+                        'second_co_debtor' => $credit->second_co_debtor,
+                        'other_value' => $credit->payment,
+                        'capital_value' => $request->capital_value,
+                        'transport_value' => $request->transport_value,
+                        'interest' => $credit->interest,
+                        'fee' => $fee,
+                        'account_id' => $credit->account_id,
+                        'status' => 'A',
+                        "start_date" => $date,
+                        'payment' => $total_credit
+                    ]);
+
+                    $credit->status = 'F';
+                    $credit->refinanced = true;
+                    $credit->refinanced_id = $new_credit->id;
+                    $credit->save();
+
+                    AccountService::updateAccount($account, $new_credit->capital_value, 'sub');
+
+                    StoreTransaction::dispatchSync($account->id, 'credit', -abs($new_credit->capital_value),
+                        'Desembolso de Credito refinanciado', 3, $credit->credit_type_id, $new_credit->id);
+
+                    return response()->json(['message' => 'Credito renovado correctamente',
+                        'credit' => $credit, 'new_credit' => $new_credit], Response::HTTP_OK);
+                } else {
+                    return response()->json(['message' => 'No tiene saldo en la cuenta #' . $account->id . ' - ' . $account->name]);
                 }
-
-
-                if ($credit->commission) {
-                    $total_commission = ($total * ($credit->commission / 100));
-                    AccountService::updateAccount($account, $total_commission, 'sub');
-                    StoreTransaction::dispatchSync($account->id, 'commission', -abs($total_commission),
-                        'Comision de ' . $credit->commission . '%', 2, 4, $credit->id);
-                }
-
-                $credit->commentary = $request->commentary;
-
-                $credit->save();
-                $credit->documents()->saveMany($documents);
-                $credit->refresh();
-
-                AccountService::updateAccount($account, $credit->capital_value, 'sub');
-
-                StoreTransaction::dispatchSync($account->id, 'credit', -abs($credit->capital_value),
-                    'Desembolso de Credito', 3, $credit->credit_type_id, $credit->id);
-
-
-                return response()->json(['message' => 'Credito aprobado correctamente', 'credit' => $credit], Response::HTTP_OK);
             } else {
-                return response()->json(['message' => 'Su credito ya se encuentra aprobado'], Response::HTTP_MULTI_STATUS);
+                return response()->json(['message' => 'El Credito se encuentra finalizado y no se puede refinanciar,
+                sugerimos generar un nuevo credito'], Response::HTTP_OK);
             }
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage(), 'line' => $exception->getLine()], Response::HTTP_BAD_REQUEST);
