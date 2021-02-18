@@ -53,10 +53,38 @@ class Transaction extends Model
         }
     }
 
-    public function scopeOrigin($query, $origin)
+    public function scopeByOrigin($query, $origin)
     {
         if ($origin) {
             return $query->where('origin', '=', $origin);
+        }
+    }
+
+    public function scopeByCredit($query, $credit)
+    {
+        if ($credit) {
+            return $query->where('credit_id', '=', $credit);
+        }
+    }
+
+    public function scopeByUser($query, $user)
+    {
+        if ($user) {
+            return $query->where('user_id', '=', $user);
+        }
+    }
+
+    public function scopeBySupplier($query, $supplier)
+    {
+        if ($supplier) {
+            return $query->where('supplier_id', '=', $supplier);
+        }
+    }
+
+    public function scopeByTypeTransaction($query, $typeTransaction)
+    {
+        if ($typeTransaction) {
+            return $query->where('type_transaction_id', '=', $typeTransaction);
         }
     }
 
