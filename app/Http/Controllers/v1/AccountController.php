@@ -14,7 +14,7 @@ class AccountController extends Controller
     {
         $per_page = isset($request->per_page) ? $request->per_page : 50;
 
-        $accounts = Account::paginate($per_page);
+        $accounts = Account::with(['transactions'])->paginate($per_page);
 
         $accounts->appends(['per_page' => $per_page]);
 

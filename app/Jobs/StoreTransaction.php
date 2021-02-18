@@ -23,7 +23,7 @@ class StoreTransaction implements ShouldQueue
      * @return void
      */
     public function __construct($account_id, $origin, $amount, $commentary = '', $supplier_id = 3,
-                                $type_transaction_id = 5, $credit_id = 0)
+                                $type_transaction_id = 5, $credit_id = null)
     {
         $this->account_id = $account_id;
         $this->type_transaction_id = $type_transaction_id;
