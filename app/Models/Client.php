@@ -45,7 +45,17 @@ class Client extends Model
 
     public function credits()
     {
-        return $this->hasMany(Credit::class);
+        return $this->hasMany(Credit::class, 'debtor_id');
+    }
+
+    public function credits_co_debtor()
+    {
+        return $this->hasMany(Credit::class, 'first_co_debtor');
+    }
+
+    public function credits_second_debtor()
+    {
+        return $this->hasMany(Credit::class, 'second_co_debtor');
     }
 
     public function scopeByName($query, $name)
