@@ -21,22 +21,20 @@ class CreditController extends Controller
         $per_page = isset($request->per_page) ? $request->per_page : 50;
 
 
-        $transactions = Credit::with(
+        $credits = Credit::with(
             [
                 'transactions', 'account', 'documents', 'debtor', 'first_co_debtor', 'second_co_debtor', 'adviser',
                 'refinanced', 'credit_type', 'payroll'
             ])->byAccount($request->account)->byClient($request->client)
             ->orderBy('created_at', 'desc')->paginate($per_page);
 
-        $transactions->appends(['per_page' => $per_page]);
+        $credits->appends(['per_page' => $per_page]);
 
-        return response()->json(['credits' => $transactions], 200);
+        return response()->json(['credits' => $credits], 200);
     }
 
     public function show(Credit $credit)
     {
-
-
         $credit = Credit::with(
             [
                 'transactions', 'account', 'documents', 'debtor', 'first_co_debtor', 'second_co_debtor', 'adviser',

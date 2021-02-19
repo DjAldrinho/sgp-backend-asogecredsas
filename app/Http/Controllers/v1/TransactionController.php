@@ -12,9 +12,15 @@ class TransactionController extends Controller
     {
         $per_page = isset($request->per_page) ? $request->per_page : 50;
 
+        $origins = [];
+
+        if ($request->origin) {
+            $origins = explode(',', $request->origin);
+        }
+
 
         $transactions = Transaction::byAccount($request->account)
-            ->byOrigin($request->origin)
+            ->byOrigin($origins)
             ->byCredit($request->credit)
             ->byUser($request->user)
             ->bySupplier($request->supplier)

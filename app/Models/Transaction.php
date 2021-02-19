@@ -56,14 +56,11 @@ class Transaction extends Model
     public function scopeByOrigin($query, $origin)
     {
         if ($origin) {
-            return $query->where('origin', '=', $origin);
-        }
-    }
+            if (!is_array($origin)) {
+                $origin = [$origin];
+            }
 
-    public function scopeByOrigins($query, $origins)
-    {
-        if ($origins) {
-            return $query->whereIn('origin', $origins);
+            return $query->whereIn('origin', $origin);
         }
     }
 
