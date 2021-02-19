@@ -60,6 +60,13 @@ class Transaction extends Model
         }
     }
 
+    public function scopeByOrigins($query, $origins)
+    {
+        if ($origins) {
+            return $query->whereIn('origin', $origins);
+        }
+    }
+
     public function scopeByCredit($query, $credit)
     {
         if ($credit) {

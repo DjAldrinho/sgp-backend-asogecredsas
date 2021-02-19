@@ -7,6 +7,7 @@ use App\Http\Controllers\v1\AuthController;
 use App\Http\Controllers\v1\ClientController;
 use App\Http\Controllers\v1\CreditController;
 use App\Http\Controllers\v1\CreditTypeController;
+use App\Http\Controllers\v1\DashboardController;
 use App\Http\Controllers\v1\LawyerController;
 use App\Http\Controllers\v1\PayrollController;
 use App\Http\Controllers\v1\SupplierController;
@@ -81,9 +82,14 @@ Route::middleware('auth:api')->group(function () {
         Route::get('all', [TransactionController::class, 'index']);
     });
 
+    Route::group(['prefix' => 'dashboard'], function () {
+        Route::get('all', [DashboardController::class, 'index']);
+    });
+
     Route::group(['prefix' => 'credits'], function () {
         Route::get('all', [CreditController::class, 'index']);
         Route::get('info/{credit}', [CreditController::class, 'show']);
+        Route::patch('cancel/{credit}', [CreditController::class, 'cancel']);
         Route::post('liquidate', [CreditController::class, 'liquidate']);
         Route::post('approve', [CreditController::class, 'approve']);
         Route::post('create', [CreditController::class, 'create']);

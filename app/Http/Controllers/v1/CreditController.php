@@ -326,4 +326,17 @@ class CreditController extends Controller
             return response()->json(['message' => $exception->getMessage(), 'line' => $exception->getLine()], Response::HTTP_BAD_REQUEST);
         }
     }
+
+    public function cancel(Credit $credit)
+    {
+        if ($credit->status == 'P') {
+            $credit->status = 'C';
+            $credit->save();
+            $credit->refresh();
+
+            return response()->json(['message' => 'Se ha finalizado correctamente el credito'], Response::HTTP_OK);
+        } else {
+            return response()->json(['message' => 'Solo se puede cancelar creditos pendientes'], Response::HTTP_BAD_REQUEST);
+        }
+    }
 }
