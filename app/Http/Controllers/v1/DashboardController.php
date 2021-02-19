@@ -27,7 +27,7 @@ class DashboardController extends Controller
             ->whereRaw("EXTRACT(MONTH FROM created_at) = {$now->isoFormat('M')}")
             ->sum('value');
 
-        $retire = Transaction::byAccount($request->account_id)
+        $retire = Transaction::byAccount($account)
             ->byOrigin(['retire', 'commission', 'credit'])
             ->whereRaw("EXTRACT(MONTH FROM created_at) = {$now->isoFormat('M')}")
             ->sum('value');

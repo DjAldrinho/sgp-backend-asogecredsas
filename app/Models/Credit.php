@@ -16,7 +16,7 @@ class Credit extends Model
         'commission', 'fee', 'adviser_id', 'refinanced_id', 'status', 'account_id', 'commentary', 'payment'
     ];
 
-    protected $appends = ['liquidate'];
+    protected $appends = ['liquidate', 'totals'];
 
     protected $casts = [
         'payment' => 'decimal:2'
@@ -101,5 +101,22 @@ class Credit extends Model
         ];
 
         return CreditHelper::liquidate($data);
+    }
+
+    public function getTotalsAttribute($value)
+    {
+        $deposit = Transaction::byAccount($this->id)
+            ->byOrigin(['credit_payment']);
+
+
+        $retire = Transaction::byAccount($this->id)
+            ->byOrigin(['commission', 'credit']);
+
+        return [
+            'total_deposit' => $deposit->sum('value'),
+            'total_retires' => $retire->sum('value'),
+            'deposits' => $deposit->paginate(5),
+            'retires' => $retire->paginate(5)
+        ];
     }
 }
