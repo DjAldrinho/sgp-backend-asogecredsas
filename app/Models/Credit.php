@@ -105,11 +105,11 @@ class Credit extends Model
 
     public function getTotalsAttribute($value)
     {
-        $deposit = Transaction::byAccount($this->id)
+        $deposit = Transaction::byCredit($this->id)
             ->byOrigin(['credit_payment']);
 
 
-        $retire = Transaction::byAccount($this->id)
+        $retire = Transaction::byCredit($this->id)
             ->byOrigin(['commission', 'credit']);
 
         return [
