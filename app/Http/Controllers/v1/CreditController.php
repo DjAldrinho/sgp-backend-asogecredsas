@@ -10,6 +10,7 @@ use App\Models\Account;
 use App\Models\Credit;
 use App\Models\CreditDocument;
 use App\Services\AccountService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -18,15 +19,42 @@ class CreditController extends Controller
 
     public function index(Request $request)
     {
+        $request->validate([
+            'per_page' => 'integer',
+            'account' => 'integer|exists:accounts,id',
+            'client' => 'integer|exists:clients,id',
+            'start_date' => 'date',
+            'end_date' => 'date',
+        ]);
+
         $per_page = isset($request->per_page) ? $request->per_page : 50;
 
+        $now = Carbon::now();
+
+        $firstDay = Carbon::now()->firstOfMonth();
+
+
+        if ($request->start_date) {
+            $start_date = $request->start_date;
+        } else {
+            $start_date = $firstDay->isoFormat('Y/MM/DD');
+        }
+
+        if ($request->end_date) {
+            $end_date = $request->end_date;
+        } else {
+            $end_date = $now->isoFormat('Y/MM/DD');
+        }
 
         $credits = Credit::with(
             [
                 'transactions', 'account', 'documents', 'debtor', 'first_co_debtor', 'second_co_debtor', 'adviser',
                 'refinanced', 'credit_type', 'payroll'
-            ])->byAccount($request->account)->byClient($request->client)
-            ->orderBy('created_at', 'desc')->paginate($per_page);
+            ])->byAccount($request->account)
+            ->byClient($request->client)
+            ->byDate($start_date, $end_date)
+            ->orderBy('created_at', 'desc')
+            ->paginate($per_page);
 
         $credits->appends(['per_page' => $per_page]);
 

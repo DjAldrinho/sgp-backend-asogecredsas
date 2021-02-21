@@ -13,10 +13,28 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
+        $request->validate([
+            'account' => 'integer|exists:accounts,id',
+            'start_date' => 'date',
+            'end_date' => 'date'
+        ]);
 
         $now = Carbon::now();
         $firstDay = Carbon::now()->firstOfMonth();
-        $period = $firstDay->isoFormat('D/M/Y') . ' - ' . $now->isoFormat('D/M/Y');
+
+
+        if ($request->start_date) {
+            $start_date = $request->start_date;
+        } else {
+            $start_date = $firstDay->isoFormat('Y/MM/DD');
+        }
+
+        if ($request->end_date) {
+            $end_date = $request->end_date;
+        } else {
+            $end_date = $now->isoFormat('Y/MM/DD');
+        }
+
 
         $accounts = Account::sum('value');
 
@@ -24,52 +42,54 @@ class DashboardController extends Controller
 
         $deposit = Transaction::byAccount($account)
             ->byOrigin(['deposit', 'credit_payment'])
-            ->whereRaw("EXTRACT(MONTH FROM created_at) = {$now->isoFormat('M')}")
+            ->byDate($start_date, $end_date)
             ->sum('value');
 
         $retire = Transaction::byAccount($account)
             ->byOrigin(['retire', 'commission', 'credit'])
-            ->whereRaw("EXTRACT(MONTH FROM created_at) = {$now->isoFormat('M')}")
+            ->byDate($start_date, $end_date)
             ->sum('value');
 
         $pending_credits = Credit::byAccount($account)
             ->where('status', 'P')
-            ->whereRaw("EXTRACT(MONTH FROM created_at) = {$now->isoFormat('M')}")
+            ->byDate($start_date, $end_date)
             ->count();
 
 
         $active_credits = Credit::byAccount($account)
             ->where('status', 'A')
-            ->whereRaw("EXTRACT(MONTH FROM created_at) = {$now->isoFormat('M')}")
+            ->byDate($start_date, $end_date)
             ->count();
 
 
         $finish_credits = Credit::byAccount($account)
             ->where('status', 'F')
-            ->whereRaw("EXTRACT(MONTH FROM created_at) = {$now->isoFormat('M')}")
+            ->byDate($start_date, $end_date)
             ->count();
 
         $total_credits = Credit::byAccount($account)
             ->where('status', '!=', 'C')
-            ->whereRaw("EXTRACT(MONTH FROM created_at) = {$now->isoFormat('M')}")
+            ->byDate($start_date, $end_date)
             ->count();
 
 
-        $ids_credit = Transaction::select('credit_id')->byOrigin('credit_payment')
+        $ids_credit = Transaction::select('credit_id')
+            ->byOrigin('credit_payment')
             ->byAccount($account)
+            ->byDate($start_date, $end_date)
             ->whereNotNull('credit_id')
             ->distinct()
             ->pluck('credit_id')->all();
 
         $expired_credits = Credit::where('status', 'A')
             ->byAccount($account)
-            ->whereRaw("EXTRACT(MONTH FROM created_at) = {$now->isoFormat('M')}")
+            ->byDate($start_date, $end_date)
             ->whereNotIn('id', $ids_credit)
             ->count();
 
 
         return [
-            'period' => $period,
+            'period' => "$start_date - $end_date",
             'total_account' => number_format(($accounts), 2, '.', ','),
             'total_deposit' => number_format(($deposit), 2, '.', ','),
             'total_retire' => number_format(($retire), 2, '.', ','),

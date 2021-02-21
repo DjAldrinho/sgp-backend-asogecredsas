@@ -92,4 +92,16 @@ class Transaction extends Model
         }
     }
 
+    public function scopeByDate($query, $start_date, $end_date = null)
+    {
+        if ($start_date) {
+            $query->where('created_at', '>=', $start_date);
+        }
+
+        if ($end_date) {
+            $query->where('created_at', '<=', $end_date);
+        }
+
+        return $query;
+    }
 }
