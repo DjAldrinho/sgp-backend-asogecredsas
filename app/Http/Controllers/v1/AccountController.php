@@ -23,6 +23,11 @@ class AccountController extends Controller
 
     public function show(Account $account)
     {
+
+        $account = Account::with([
+            'credits', 'credits.transactions'
+        ])->where('id', $account->id)->firstOrFail();
+
         return response()->json(['account' => $account], 200);
     }
 

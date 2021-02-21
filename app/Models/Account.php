@@ -22,6 +22,10 @@ class Account extends Model
         'deleted_at'
     ];
 
+    protected $appends = [
+        'info'
+    ];
+
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
@@ -30,6 +34,27 @@ class Account extends Model
     public function credits()
     {
         return $this->hasMany(Credit::class);
+    }
+
+    public function getInfoAttribute($value)
+    {
+
+        $deposits = Transaction::byOrigin(['deposit', 'credit_payment'])
+            ->byAccount($this->id);
+
+        $retires = Transaction::byOrigin(['retire', 'commission', 'credit'])
+            ->byAccount($this->id);
+
+        return [
+            'deposits' => [
+                'total' => number_format($deposits->sum('value'), 2, '.', ','),
+                'detail' => $deposits->paginate(5)
+            ],
+            'retires' => [
+                'total' => number_format($retires->sum('value'), 2, '.', ','),
+                'detail' => $retires->paginate(5)
+            ]
+        ];
     }
 
 }

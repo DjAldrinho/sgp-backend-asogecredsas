@@ -215,7 +215,7 @@ class CreditController extends Controller
                     }
 
 
-                    if ($credit->commission) {
+                    if ($credit->commission && $credit->commision > 0) {
                         $total_commission = ($total * ($credit->commission / 100));
                         AccountService::updateAccount($account, $total_commission, 'sub');
                         StoreTransaction::dispatchSync($account->id, 'commission', -abs($total_commission),
@@ -335,6 +335,23 @@ class CreditController extends Controller
             return response()->json(['message' => 'Se ha finalizado correctamente el credito'], Response::HTTP_OK);
         } else {
             return response()->json(['message' => 'Solo se puede cancelar creditos pendientes'], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function addCommentary(Request $request)
+    {
+        $request->validate([
+            'credit_id' => 'required|integer|exists:credits,id',
+        ]);
+
+        try {
+            $credit = Credit::find($request->credit_id);
+            $credit->commentary = $request->commentary;
+            $credit->save();
+            $credit->refresh();
+            return response()->json(['message' => 'Nota actualizada correctamente!', 'credit' => $credit], Response::HTTP_OK);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
         }
     }
 }
