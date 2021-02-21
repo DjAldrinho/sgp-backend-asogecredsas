@@ -132,4 +132,11 @@ class Credit extends Model
 
         return $query;
     }
+
+    public function scopeByStatus($query, $status)
+    {
+        if ($status) {
+            return $query->where('status', $status);
+        }
+    }
 }

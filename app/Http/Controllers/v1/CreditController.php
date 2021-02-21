@@ -25,6 +25,7 @@ class CreditController extends Controller
             'client' => 'integer|exists:clients,id',
             'start_date' => 'date',
             'end_date' => 'date',
+            'status' => 'string'
         ]);
 
         $per_page = isset($request->per_page) ? $request->per_page : 50;
@@ -53,6 +54,7 @@ class CreditController extends Controller
             ])->byAccount($request->account)
             ->byClient($request->client)
             ->byDate($start_date, $end_date)
+            ->byStatus($request->status)
             ->orderBy('created_at', 'desc')
             ->paginate($per_page);
 
