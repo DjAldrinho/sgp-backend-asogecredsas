@@ -30,31 +30,13 @@ class CreditController extends Controller
 
         $per_page = isset($request->per_page) ? $request->per_page : 50;
 
-        $now = Carbon::now();
-
-        $firstDay = Carbon::now()->firstOfMonth();
-
-
-        if ($request->start_date) {
-            $start_date = $request->start_date;
-        } else {
-            $start_date = $firstDay->isoFormat('Y/MM/DD h:i:s');
-        }
-
-        if ($request->end_date) {
-            $end_date = $request->end_date;
-        } else {
-            $end_date = $now->isoFormat('Y/MM/DD h:i:s');
-        }
-
-
         $credits = Credit::with(
             [
                 'transactions', 'account', 'documents', 'debtor', 'first_co_debtor', 'second_co_debtor', 'adviser',
                 'credit_type', 'payroll'
             ])->byAccount($request->account)
             ->byClient($request->client)
-            ->byDate($start_date, $end_date)
+            ->byDate( $request->start_date, $request->end_date)
             ->byStatus($request->status)
             ->orderBy('created_at', 'desc')
             ->paginate($per_page);

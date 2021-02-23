@@ -25,4 +25,6 @@ class Adviser extends Model
             return $query->where('phone', 'like', '%' . $value . '%')->orWhere('name', 'ilike', '%' . $value . '%');
         }
     }
+
+
 }
