@@ -23,8 +23,8 @@ class CreditController extends Controller
             'per_page' => 'integer',
             'account' => 'integer|exists:accounts,id',
             'client' => 'integer|exists:clients,id',
-            'start_date' => 'date',
-            'end_date' => 'date',
+            'start_date' => 'date:y-m-d',
+            'end_date' => 'date:y-m-d',
             'status' => 'string'
         ]);
 
@@ -38,19 +38,20 @@ class CreditController extends Controller
         if ($request->start_date) {
             $start_date = $request->start_date;
         } else {
-            $start_date = $firstDay->isoFormat('Y/MM/DD');
+            $start_date = $firstDay->isoFormat('Y/MM/DD h:i:s');
         }
 
         if ($request->end_date) {
             $end_date = $request->end_date;
         } else {
-            $end_date = $now->isoFormat('Y/MM/DD');
+            $end_date = $now->isoFormat('Y/MM/DD h:i:s');
         }
+
 
         $credits = Credit::with(
             [
                 'transactions', 'account', 'documents', 'debtor', 'first_co_debtor', 'second_co_debtor', 'adviser',
-                'refinanced', 'credit_type', 'payroll'
+                'credit_type', 'payroll'
             ])->byAccount($request->account)
             ->byClient($request->client)
             ->byDate($start_date, $end_date)

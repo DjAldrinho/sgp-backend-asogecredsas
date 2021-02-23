@@ -18,8 +18,8 @@ class TransactionController extends Controller
             'credit' => 'integer|exists:credits,id',
             'user' => 'integer|exists:users,id',
             'type_transaction' => 'integer|exists:type_transaction,id',
-            'start_date' => 'date',
-            'end_date' => 'date',
+            'start_date' => 'date:y-m-d',
+            'end_date' => 'date:y-m-d',
         ]);
 
         $per_page = isset($request->per_page) ? $request->per_page : 50;

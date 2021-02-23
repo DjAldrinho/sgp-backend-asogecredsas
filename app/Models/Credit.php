@@ -123,11 +123,11 @@ class Credit extends Model
     public function scopeByDate($query, $start_date, $end_date = null)
     {
         if ($start_date) {
-            $query->where('created_at', '>=', $start_date);
+            $query->where('created_at', '>=', "$start_date 00:00:00");
         }
 
         if ($end_date) {
-            $query->where('created_at', '<=', $end_date);
+            $query->where('created_at', '<=', "$end_date 23:59:00");
         }
 
         return $query;
