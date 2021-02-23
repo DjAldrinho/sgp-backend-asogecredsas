@@ -57,7 +57,7 @@ class Credit extends Model
         return $this->belongsTo(Adviser::class);
     }
 
-    public function refinanced()
+    public function credit_refinanced()
     {
         return $this->belongsTo(Credit::class, 'refinanced_id');
     }

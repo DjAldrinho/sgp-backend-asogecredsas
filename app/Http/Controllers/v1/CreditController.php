@@ -10,7 +10,6 @@ use App\Models\Account;
 use App\Models\Credit;
 use App\Models\CreditDocument;
 use App\Services\AccountService;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -33,10 +32,10 @@ class CreditController extends Controller
         $credits = Credit::with(
             [
                 'transactions', 'account', 'documents', 'debtor', 'first_co_debtor', 'second_co_debtor', 'adviser',
-                'credit_type', 'payroll'
+                'credit_type', 'payroll', 'credit_refinanced'
             ])->byAccount($request->account)
             ->byClient($request->client)
-            ->byDate( $request->start_date, $request->end_date)
+            ->byDate($request->start_date, $request->end_date)
             ->byStatus($request->status)
             ->orderBy('created_at', 'desc')
             ->paginate($per_page);
@@ -51,7 +50,7 @@ class CreditController extends Controller
         $credit = Credit::with(
             [
                 'transactions', 'account', 'documents', 'debtor', 'first_co_debtor',
-                'second_co_debtor', 'adviser', 'refinanced', 'credit_type', 'payroll'
+                'second_co_debtor', 'adviser', 'credit_type', 'payroll', 'credit_refinanced'
             ])->where('id', $credit->id)->firstOrFail();
 
         return response()->json(['credit' => $credit]);
