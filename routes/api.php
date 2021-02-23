@@ -89,7 +89,6 @@ Route::middleware('auth:api')->group(function () {
     Route::group(['prefix' => 'credits'], function () {
         Route::get('all', [CreditController::class, 'index']);
         Route::get('info/{credit}', [CreditController::class, 'show']);
-        Route::patch('cancel/{credit}', [CreditController::class, 'cancel']);
         Route::post('liquidate', [CreditController::class, 'liquidate']);
         Route::post('approve', [CreditController::class, 'approve']);
         Route::post('create', [CreditController::class, 'create']);

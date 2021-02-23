@@ -67,8 +67,8 @@ class CreditController extends Controller
     {
         $credit = Credit::with(
             [
-                'transactions', 'account', 'documents', 'debtor', 'first_co_debtor', 'second_co_debtor', 'adviser',
-                'refinanced', 'credit_type', 'payroll'
+                'transactions', 'account', 'documents', 'debtor', 'first_co_debtor',
+                'second_co_debtor', 'adviser', 'refinanced', 'credit_type', 'payroll'
             ])->where('id', $credit->id)->firstOrFail();
 
         return response()->json(['credit' => $credit]);
@@ -136,13 +136,15 @@ class CreditController extends Controller
                 ]);
 
 
-                return response()->json(['message' => __('messages.credits.register'), 'credit' => $credit], 200);
+                return response()->json(['message' => __('messages.credits.register'),
+                    'credit' => $credit], Response::HTTP_OK);
             } else {
-                return response()->json(['message' => 'No tiene saldo en la cuenta #' . $account->id . ' - ' . $account->name]);
+                return response()->json(['message' => 'No tiene saldo en la cuenta #' . $account->id . ' - ' . $account->name],
+                    Response::HTTP_BAD_REQUEST);
             }
 
         } catch (\Exception $exception) {
-            return response()->json(['message' => $exception->getMessage()], 409);
+            return response()->json(['message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -178,7 +180,7 @@ class CreditController extends Controller
                 $credit->status = 'F';
                 $credit->save();
                 $credit->refresh();
-                return response()->json(['message' => 'No se puede abonar a un credito finalizado']);
+                return response()->json(['message' => 'No se puede abonar a un credito finalizado'], Response::HTTP_BAD_REQUEST);
             }
 
         } catch (\Exception $exception) {
@@ -266,10 +268,10 @@ class CreditController extends Controller
 
                     return response()->json(['message' => 'Credito aprobado correctamente', 'credit' => $credit], Response::HTTP_OK);
                 } else {
-                    return response()->json(['message' => 'Su credito ya se encuentra aprobado'], Response::HTTP_MULTI_STATUS);
+                    return response()->json(['message' => 'Su credito ya se encuentra aprobado'], Response::HTTP_BAD_REQUEST);
                 }
             } else {
-                return response()->json(['message' => 'No tiene saldo en la cuenta #' . $account->id . ' - ' . $account->name]);
+                return response()->json(['message' => 'No tiene saldo en la cuenta #' . $account->id . ' - ' . $account->name], Response::HTTP_BAD_REQUEST);
             }
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage(), 'line' => $exception->getLine()], Response::HTTP_BAD_REQUEST);
@@ -320,7 +322,7 @@ class CreditController extends Controller
                         'debtor_id' => $credit->debtor_id,
                         'first_co_debtor' => $credit->first_co_debtor,
                         'second_co_debtor' => $credit->second_co_debtor,
-                        'other_value' => $credit->payment,
+                        'other_value' => $credit->payment ? $credit->payment : 0,
                         'capital_value' => $request->capital_value,
                         'transport_value' => $request->transport_value,
                         'interest' => $credit->interest,
@@ -344,27 +346,14 @@ class CreditController extends Controller
                     return response()->json(['message' => 'Credito renovado correctamente',
                         'credit' => $credit, 'new_credit' => $new_credit], Response::HTTP_OK);
                 } else {
-                    return response()->json(['message' => 'No tiene saldo en la cuenta #' . $account->id . ' - ' . $account->name]);
+                    return response()->json(['message' => 'No tiene saldo en la cuenta #' . $account->id . ' - ' . $account->name], Response::HTTP_BAD_REQUEST);
                 }
             } else {
                 return response()->json(['message' => 'El Credito se encuentra finalizado y no se puede refinanciar,
-                sugerimos generar un nuevo credito'], Response::HTTP_OK);
+                sugerimos generar un nuevo credito'], Response::HTTP_BAD_REQUEST);
             }
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage(), 'line' => $exception->getLine()], Response::HTTP_BAD_REQUEST);
-        }
-    }
-
-    public function cancel(Credit $credit)
-    {
-        if ($credit->status == 'P') {
-            $credit->status = 'C';
-            $credit->save();
-            $credit->refresh();
-
-            return response()->json(['message' => 'Se ha finalizado correctamente el credito'], Response::HTTP_OK);
-        } else {
-            return response()->json(['message' => 'Solo se puede cancelar creditos pendientes'], Response::HTTP_BAD_REQUEST);
         }
     }
 

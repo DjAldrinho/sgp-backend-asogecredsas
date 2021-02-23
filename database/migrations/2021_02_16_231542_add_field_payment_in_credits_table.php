@@ -14,7 +14,7 @@ class AddFieldPaymentInCreditsTable extends Migration
     public function up()
     {
         Schema::table('credits', function (Blueprint $table) {
-            $table->double('payment')->nullable();
+            $table->double('payment')->default(0)->nullable();
         });
     }
 

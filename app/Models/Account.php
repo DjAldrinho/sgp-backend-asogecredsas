@@ -45,15 +45,20 @@ class Account extends Model
         $retires = Transaction::byOrigin(['retire', 'commission', 'credit'])
             ->byAccount($this->id);
 
+        $credits = Credit::where('account_id', $this->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
+
         return [
             'deposits' => [
                 'total' => number_format($deposits->sum('value'), 2, '.', ','),
-                'detail' => $deposits->paginate(5)
+                'detail' => $deposits->orderBy('created_at', 'desc')->paginate(5)
             ],
             'retires' => [
                 'total' => number_format($retires->sum('value'), 2, '.', ','),
-                'detail' => $retires->paginate(5)
-            ]
+                'detail' => $retires->orderBy('created_at', 'desc')->paginate(5)
+            ],
+            'credits' => $credits
         ];
     }
 
