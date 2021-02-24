@@ -141,5 +141,12 @@ class Credit extends Model
         }
     }
 
+    public function scopeByAdviser($query, $adviser)
+    {
+        if ($adviser) {
+            return $query->where('adviser_id', $adviser);
+        }
+    }
+
 
 }

@@ -22,6 +22,7 @@ class CreditController extends Controller
             'per_page' => 'integer',
             'account' => 'integer|exists:accounts,id',
             'client' => 'integer|exists:clients,id',
+            'adviser' => 'integer|exists:advisers,id',
             'start_date' => 'date:y-m-d',
             'end_date' => 'date:y-m-d',
             'status' => 'string'
@@ -35,6 +36,7 @@ class CreditController extends Controller
                 'credit_type', 'payroll', 'credit_refinanced'
             ])->byAccount($request->account)
             ->byClient($request->client)
+            ->byClient($request->adviser)
             ->byDate($request->start_date, $request->end_date)
             ->byStatus($request->status)
             ->orderBy('created_at', 'desc')

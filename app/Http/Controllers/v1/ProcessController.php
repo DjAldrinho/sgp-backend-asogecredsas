@@ -74,6 +74,8 @@ class ProcessController extends Controller
                 $process->payment = $process->payment - $request->value;
                 if ($process->payment <= 0) {
                     $process->status = 'F';
+                    $process->end_date = date('Y-m-d');
+
                 }
                 $process->save();
                 $process->refresh();
