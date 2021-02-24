@@ -17,6 +17,7 @@ class TransactionController extends Controller
             'account' => 'integer|exists:accounts,id',
             'credit' => 'integer|exists:credits,id',
             'user' => 'integer|exists:users,id',
+            'process' => 'integer|exists:processes,id',
             'type_transaction' => 'integer|exists:type_transaction,id',
             'start_date' => 'date:y-m-d',
             'end_date' => 'date:y-m-d',
@@ -37,6 +38,7 @@ class TransactionController extends Controller
             ->bySupplier($request->supplier)
             ->byTypeTransaction($request->type_transaction)
             ->byDate($request->start_date, $request->end_date)
+            ->byProcess($request->process)
             ->orderBy('created_at', 'desc')->paginate($per_page);
 
         $transactions->appends(['per_page' => $per_page]);

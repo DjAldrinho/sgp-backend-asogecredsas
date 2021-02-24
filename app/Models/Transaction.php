@@ -105,4 +105,11 @@ class Transaction extends Model
 
         return $query;
     }
+
+    public function scopeByProcess($query, $process)
+    {
+        if ($process) {
+            return $query->where('process_id', $process);
+        }
+    }
 }

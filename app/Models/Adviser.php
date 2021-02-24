@@ -13,7 +13,7 @@ class Adviser extends Model
     protected $fillable = ['name', 'phone', 'status'];
 
     protected $appends = [
-        'credits_paginate', 'total_commissions'
+        'total_commissions'
     ];
 
     protected $hidden = ['deleted_at'];
@@ -30,11 +30,6 @@ class Adviser extends Model
         }
     }
 
-    public function getCreditsPaginateAttribute($value)
-    {
-        return Credit::where('adviser_id', $this->id)
-            ->paginate(5);
-    }
 
     public function getTotalCommissionsAttribute($value)
     {
