@@ -231,7 +231,7 @@ class CreditController extends Controller
                     }
 
 
-                    if ($credit->commission && $credit->commision > 0) {
+                    if ($credit->commision > 0) {
                         $total_commission = ($total * ($credit->commission / 100));
                         AccountService::updateAccount($account, $total_commission, 'sub');
                         StoreTransaction::dispatchSync($account->id, 'commission', -abs($total_commission),
@@ -365,6 +365,19 @@ class CreditController extends Controller
             return response()->json(['message' => 'Documento eliminado'], 200);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()]);
+        }
+    }
+
+    public function cancel(Credit $credit)
+    {
+        if ($credit->status == 'P') {
+            $credit->status = 'C';
+            $credit->save();
+            $credit->refresh();
+
+            return response()->json(['message' => 'Se ha finalizado correctamente el credito'], Response::HTTP_OK);
+        } else {
+            return response()->json(['message' => 'Solo se puede cancelar creditos pendientes'], Response::HTTP_BAD_REQUEST);
         }
     }
 }
