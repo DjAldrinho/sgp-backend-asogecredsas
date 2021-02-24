@@ -355,4 +355,14 @@ class CreditController extends Controller
             return response()->json(['message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
         }
     }
+
+    public function removeDocument(CreditDocument $document)
+    {
+        try {
+            $document->delete();
+            return response()->json(['message' => 'Documento eliminado'], 200);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()]);
+        }
+    }
 }

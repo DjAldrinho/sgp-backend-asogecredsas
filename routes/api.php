@@ -10,6 +10,7 @@ use App\Http\Controllers\v1\CreditTypeController;
 use App\Http\Controllers\v1\DashboardController;
 use App\Http\Controllers\v1\LawyerController;
 use App\Http\Controllers\v1\PayrollController;
+use App\Http\Controllers\v1\ProcessController;
 use App\Http\Controllers\v1\SupplierController;
 use App\Http\Controllers\v1\TransactionController;
 use App\Http\Controllers\v1\TypeTransactionController;
@@ -96,6 +97,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('deposit', [CreditController::class, 'deposit']);
         Route::post('refinance', [CreditController::class, 'refinance']);
         Route::post('add-commentary', [CreditController::class, 'addCommentary']);
+        Route::delete('delete-document/{document}', [CreditController::class, 'removeDocument']);
     });
 
     Route::group(['prefix' => 'credit-types'], function () {
@@ -103,6 +105,13 @@ Route::middleware('auth:api')->group(function () {
         Route::post('create', [CreditTypeController::class, 'create']);
         Route::patch('update/{creditType}', [CreditTypeController::class, 'update']);
         Route::delete('delete/{creditType}', [CreditTypeController::class, 'destroy']);
+    });
+
+    Route::group(['prefix' => 'processes'], function () {
+        Route::get('all', [ProcessController::class, 'index']);
+        Route::post('create', [ProcessController::class, 'create']);
+        Route::patch('update/{process}', [ProcessController::class, 'update']);
+        Route::delete('delete/{process}', [ProcessController::class, 'destroy']);
     });
 
     Route::group(['prefix' => 'payrolls'], function () {
