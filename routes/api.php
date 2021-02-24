@@ -64,6 +64,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::group(['prefix' => 'advisers'], function () {
         Route::get('all', [AdviserController::class, 'index']);
+        Route::get('info/{adviser}', [AdviserController::class, 'show']);
         Route::patch('update/{adviser}', [AdviserController::class, 'update']);
         Route::post('create', [AdviserController::class, 'create']);
         Route::delete('delete/{adviser}', [AdviserController::class, 'destroy']);

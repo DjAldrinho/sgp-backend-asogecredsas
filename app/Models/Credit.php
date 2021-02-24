@@ -115,6 +115,7 @@ class Credit extends Model
         return [
             'total_deposit' => $deposit->sum('value'),
             'total_retires' => $retire->sum('value'),
+            'total_commissions' => ($this->capital_value + $this->transport_value + $this->other_value) * ($this->commission / 100),
             'deposits' => $deposit->paginate(5),
             'retires' => $retire->paginate(5)
         ];
@@ -139,4 +140,6 @@ class Credit extends Model
             return $query->where('status', $status);
         }
     }
+
+
 }

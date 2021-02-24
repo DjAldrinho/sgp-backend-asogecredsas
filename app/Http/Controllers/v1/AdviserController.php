@@ -20,6 +20,11 @@ class AdviserController extends Controller
         return response()->json(['advisers' => $advisers], 200);
     }
 
+    public function show(Adviser $adviser)
+    {
+        return response()->json(['adviser' => $adviser], 200);
+    }
+
 
     public function create(Request $request)
     {
