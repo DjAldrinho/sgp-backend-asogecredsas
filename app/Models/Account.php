@@ -23,7 +23,7 @@ class Account extends Model
     ];
 
     protected $appends = [
-        'credits_paginate', 'deposits', 'retires'
+        'total_deposits', 'total_retires'
     ];
 
     public function transactions()
@@ -36,35 +36,19 @@ class Account extends Model
         return $this->hasMany(Credit::class);
     }
 
-    public function getCreditsPaginateAttribute($value)
-    {
-        return Credit::where('account_id', $this->id)
-            ->orderBy('created_at', 'desc')
-            ->paginate(5);
-
-    }
-
-    public function getDepositsAttribute($value)
+    public function getTotalDepositsAttribute($value)
     {
         $deposits = Transaction::byOrigin(['deposit', 'credit_payment'])
             ->byAccount($this->id);
 
-        return [
-            'total' => number_format($deposits->sum('value'), 2, '.', ','),
-            'detail' => $deposits->orderBy('created_at', 'desc')->paginate(5)
-        ];
+        return number_format($deposits->sum('value'), 2, '.', ',');
     }
 
-    public function getRetiresAttribute($value)
+    public function getTotalRetiresAttribute($value)
     {
         $retires = Transaction::byOrigin(['retire', 'commission', 'credit'])
             ->byAccount($this->id);
 
-        return [
-            'total' => number_format($retires->sum('value'), 2, '.', ','),
-            'detail' => $retires->orderBy('created_at', 'desc')->paginate(5)
-        ];
+        return number_format($retires->sum('value'), 2, '.', ',');
     }
-
-
 }

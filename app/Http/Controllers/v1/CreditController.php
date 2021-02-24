@@ -36,7 +36,7 @@ class CreditController extends Controller
                 'credit_type', 'payroll', 'credit_refinanced'
             ])->byAccount($request->account)
             ->byClient($request->client)
-            ->byClient($request->adviser)
+            ->byAdviser($request->adviser)
             ->byDate($request->start_date, $request->end_date)
             ->byStatus($request->status)
             ->orderBy('created_at', 'desc')
