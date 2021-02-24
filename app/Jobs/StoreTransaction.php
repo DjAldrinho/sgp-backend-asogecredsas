@@ -15,15 +15,22 @@ class StoreTransaction implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $account_id, $type_transaction_id, $origin, $supplier_id, $amount, $commentary, $credit_id;
+    protected $account_id, $type_transaction_id, $origin, $supplier_id, $amount, $commentary, $credit_id, $process_id;
 
     /**
      * Create a new job instance.
      *
-     * @return void
+     * @param $account_id
+     * @param $origin
+     * @param $amount
+     * @param string $commentary
+     * @param int $supplier_id
+     * @param int $type_transaction_id
+     * @param null $credit_id
+     * @param null $process_id
      */
     public function __construct($account_id, $origin, $amount, $commentary = '', $supplier_id = 3,
-                                $type_transaction_id = 5, $credit_id = null)
+                                $type_transaction_id = 5, $credit_id = null, $process_id = null)
     {
         $this->account_id = $account_id;
         $this->type_transaction_id = $type_transaction_id;
@@ -32,6 +39,7 @@ class StoreTransaction implements ShouldQueue
         $this->amount = $amount;
         $this->commentary = $commentary;
         $this->credit_id = $credit_id;
+        $this->process_id = $process_id;
     }
 
     /**
@@ -57,7 +65,8 @@ class StoreTransaction implements ShouldQueue
                 'type_transaction_id' => $this->type_transaction_id,
                 'commentary' => $this->commentary,
                 'user_id' => Auth::id(),
-                'credit_id' => $this->credit_id
+                'credit_id' => $this->credit_id,
+                'process_id' => $this->process_id
             ]);
 
         } catch (\Exception $exception) {

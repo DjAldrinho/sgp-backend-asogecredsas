@@ -110,6 +110,7 @@ Route::middleware('auth:api')->group(function () {
     Route::group(['prefix' => 'processes'], function () {
         Route::get('all', [ProcessController::class, 'index']);
         Route::post('create', [ProcessController::class, 'create']);
+        Route::post('deposit', [ProcessController::class, 'deposit']);
         Route::patch('update/{process}', [ProcessController::class, 'update']);
         Route::delete('delete/{process}', [ProcessController::class, 'destroy']);
     });

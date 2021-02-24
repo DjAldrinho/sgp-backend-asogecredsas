@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\StoreTransaction;
+use App\Models\Credit;
 use App\Models\Process;
+use App\Services\AccountService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ProcessController extends Controller
 {
@@ -30,9 +34,13 @@ class ProcessController extends Controller
         ]);
 
         try {
+
+            $count = Process::count() + 1;
+
             $process = Process::create([
                 'lawyer_id' => $request->lawyer_id,
                 'credit_id' => $request->credit_id,
+                'code' => 'P' . time() . '-' . $count,
                 'court' => $request->court,
                 'demand_value' => $request->demand_value,
                 'fees_value' => $request->fees_value,
@@ -45,6 +53,49 @@ class ProcessController extends Controller
             ], 201);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
+        }
+    }
+
+    public function deposit(Request $request)
+    {
+        $request->validate([
+            'process_id' => 'required|integer|exists:processes,id',
+            'value' => 'required|numeric'
+        ]);
+
+        try {
+
+            $process = Process::find($request->process_id);
+
+            if ($process->payment > 0) {
+
+                $credit = Credit::findOrFail($process->credit_id);
+
+                $process->payment = $process->payment - $request->value;
+                if ($process->payment <= 0) {
+                    $process->status = 'F';
+                }
+                $process->save();
+                $process->refresh();
+
+                AccountService::updateAccount($credit->account, $request->value, 'add');
+                StoreTransaction::dispatchSync($credit->account->id, 'process_payment', $request->value,
+                    'Abono de procceso #' . $process->code, 3, 4, null, $process->id);
+
+
+                $payment = number_format(($process->payment), 2, '.', ',');
+
+                return response()->json(['message' => 'Valor abonado al proceso #' . $process->code . ' saldo restante: ' . $payment,
+                    'process' => $process]);
+            } else {
+                $process->status = 'F';
+                $process->save();
+                $process->refresh();
+                return response()->json(['message' => 'No se puede abonar a un proceso finalizado'], Response::HTTP_BAD_REQUEST);
+            }
+
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()]);
         }
     }
 }

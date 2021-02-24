@@ -11,6 +11,7 @@ class Process extends Model
 
     protected $fillable = [
         'lawyer_id',
+        'code',
         'credit_id',
         'court',
         'demand_value',
