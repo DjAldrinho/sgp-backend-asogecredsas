@@ -37,6 +37,7 @@ class Adviser extends Model
 
         $credits = Credit::where('adviser_id', $this->id)
             ->where('commission', '>', 0)
+            ->whereIn('status', ['A', 'F'])
             ->get();
 
         if (count($credits) > 0) {

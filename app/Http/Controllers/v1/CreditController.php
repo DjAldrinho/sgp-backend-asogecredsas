@@ -231,7 +231,7 @@ class CreditController extends Controller
                     }
 
 
-                    if ($credit->commision > 0) {
+                    if ($credit->commission > 0) {
                         $total_commission = ($total * ($credit->commission / 100));
                         AccountService::updateAccount($account, $total_commission, 'sub');
                         StoreTransaction::dispatchSync($account->id, 'commission', -abs($total_commission),
