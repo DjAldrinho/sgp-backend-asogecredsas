@@ -100,7 +100,7 @@ class Transaction extends Model
         }
 
         if ($end_date) {
-            $query->where('created_at', '<=', "$end_date 23:59:00");
+            $query->where('created_at', '<=', "$end_date 23:59:59");
         }
 
         return $query;

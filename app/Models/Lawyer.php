@@ -38,6 +38,11 @@ class Lawyer extends Model
 
     public function getProfessionalCardUrlAttribute()
     {
-        return $this->professional_card ? asset('storage') . '/'. $this->professional_card : '';
+        return $this->professional_card ? asset('storage') . '/' . $this->professional_card : '';
+    }
+
+    public function processes()
+    {
+        return $this->hasMany(Process::class);
     }
 }

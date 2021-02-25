@@ -14,9 +14,27 @@ class ProcessController extends Controller
 {
     public function index(Request $request)
     {
+
+        $request->validate([
+            'lawyer' => 'integer|exists:lawyers,id',
+            'credit' => 'integer|exists:credits,id',
+            'start_date' => 'date:y-m-d',
+            'end_date' => 'date:y-m-d',
+            'status' => 'string'
+        ]);
+
         $per_page = isset($request->per_page) ? $request->per_page : 50;
 
-        $processes = Process::paginate($per_page);
+        if ($request->status) {
+            $status = explode(',', $request->status);
+        }
+
+        $processes = Process::with('credit', 'lawyer')
+            ->byCredit($request->credit)
+            ->byLawyer($request->lawyer)
+            ->byDate($request->start_date, $request->end_date)
+            ->byStatus($status)
+            ->paginate($per_page);
 
         $processes->appends(['per_page' => $per_page]);
 
