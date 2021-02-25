@@ -92,24 +92,28 @@ class ProcessController extends Controller
 
                 $credit = Credit::findOrFail($process->credit_id);
 
-                $process->payment = $process->payment - $request->value;
-                if ($process->payment <= 0) {
-                    $process->status = 'F';
-                    $process->end_date = date('Y-m-d');
+                if ($credit->account) {
+                    $process->payment = $process->payment - $request->value;
+                    if ($process->payment <= 0) {
+                        $process->status = 'F';
+                        $process->end_date = date('Y-m-d');
 
+                    }
+                    $process->save();
+                    $process->refresh();
+
+                    AccountService::updateAccount($credit->account, $request->value, 'add');
+                    StoreTransaction::dispatchSync($credit->account->id, 'process_payment', $request->value,
+                        'Abono de procceso #' . $process->code, 3, 4, null, $process->id);
+
+
+                    $payment = number_format(($process->payment), 2, '.', ',');
+
+                    return response()->json(['message' => 'Valor abonado al proceso #' . $process->code . ' saldo restante: ' . $payment,
+                        'process' => $process]);
+                } else {
+                    return response()->json(['message' => 'La cuenta asociada no existe'], Response::HTTP_BAD_REQUEST);
                 }
-                $process->save();
-                $process->refresh();
-
-                AccountService::updateAccount($credit->account, $request->value, 'add');
-                StoreTransaction::dispatchSync($credit->account->id, 'process_payment', $request->value,
-                    'Abono de procceso #' . $process->code, 3, 4, null, $process->id);
-
-
-                $payment = number_format(($process->payment), 2, '.', ',');
-
-                return response()->json(['message' => 'Valor abonado al proceso #' . $process->code . ' saldo restante: ' . $payment,
-                    'process' => $process]);
             } else {
                 $process->status = 'F';
                 $process->save();

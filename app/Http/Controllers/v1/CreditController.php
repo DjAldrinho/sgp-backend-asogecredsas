@@ -153,30 +153,33 @@ class CreditController extends Controller
 
             $credit = Credit::find($request->credit_id);
 
-            if ($credit->payment > 0) {
-                $credit->payment = $credit->payment - $request->value;
-                if ($credit->payment <= 0) {
+            if ($credit->account) {
+                if ($credit->payment > 0) {
+                    $credit->payment = $credit->payment - $request->value;
+                    if ($credit->payment <= 0) {
+                        $credit->status = 'F';
+                    }
+                    $credit->save();
+                    $credit->refresh();
+
+                    AccountService::updateAccount($credit->account, $request->value, 'add');
+                    StoreTransaction::dispatchSync($credit->account->id, 'credit_payment', $request->value,
+                        'Abono de credito #' . $credit->code, 3, 4, $credit->id);
+
+
+                    $payment = number_format(($credit->payment), 2, '.', ',');
+
+                    return response()->json(['message' => 'Valor abonado al credito #' . $credit->code . ' saldo restante: ' . $payment,
+                        'credit' => $credit]);
+                } else {
                     $credit->status = 'F';
+                    $credit->save();
+                    $credit->refresh();
+                    return response()->json(['message' => 'No se puede abonar a un credito finalizado'], Response::HTTP_BAD_REQUEST);
                 }
-                $credit->save();
-                $credit->refresh();
-
-                AccountService::updateAccount($credit->account, $request->value, 'add');
-                StoreTransaction::dispatchSync($credit->account->id, 'credit_payment', $request->value,
-                    'Abono de credito #' . $credit->code, 3, 4, $credit->id);
-
-
-                $payment = number_format(($credit->payment), 2, '.', ',');
-
-                return response()->json(['message' => 'Valor abonado al credito #' . $credit->code . ' saldo restante: ' . $payment,
-                    'credit' => $credit]);
             } else {
-                $credit->status = 'F';
-                $credit->save();
-                $credit->refresh();
-                return response()->json(['message' => 'No se puede abonar a un credito finalizado'], Response::HTTP_BAD_REQUEST);
+                return response()->json(['message' => 'La cuenta asociada no existe'], Response::HTTP_BAD_REQUEST);
             }
-
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()]);
         }
