@@ -22,6 +22,8 @@ class CreditController extends Controller
             'per_page' => 'integer',
             'account' => 'integer|exists:accounts,id',
             'client' => 'integer|exists:clients,id',
+            'first_co_debtor' => 'integer|exists:clients,id',
+            'second_co_debtor' => 'integer|exists:clients,id',
             'adviser' => 'integer|exists:advisers,id',
             'start_date' => 'date:y-m-d',
             'end_date' => 'date:y-m-d',
@@ -42,6 +44,8 @@ class CreditController extends Controller
                 'credit_type', 'payroll', 'credit_refinanced'
             ])->byAccount($request->account)
             ->byClient($request->client)
+            ->byFirstCoDebtor($request->first_co_debtor)
+            ->bySecondCoDebtor($request->second_co_debtor)
             ->byAdviser($request->adviser)
             ->byDate($request->start_date, $request->end_date)
             ->byStatus($status)

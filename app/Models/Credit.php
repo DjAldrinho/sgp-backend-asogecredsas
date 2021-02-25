@@ -89,6 +89,20 @@ class Credit extends Model
         }
     }
 
+    public function scopeByFirstCoDebtor($query, $client)
+    {
+        if ($client) {
+            return $query->where('first_co_debtor', '=', $client);
+        }
+    }
+
+    public function scopeBySecondCoDebtor($query, $client)
+    {
+        if ($client) {
+            return $query->where('second_co_debtor', '=', $client);
+        }
+    }
+
     public function getLiquidateAttribute($value)
     {
         $data = [

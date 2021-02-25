@@ -35,7 +35,7 @@ class Client extends Model
         'deleted_at'
     ];
 
-    protected $appends = ['sign_url', 'last_transactions'];
+    protected $appends = ['sign_url'];
 
 
     public function getSignUrlAttribute()
@@ -77,16 +77,6 @@ class Client extends Model
         if ($value) {
             return $query->where('document_number', 'like', '%' . $value . '%')->orWhere('name', 'ilike', '%' . $value . '%');
         }
-    }
-
-    public function getLastTransactionsAttribute($value)
-    {
-
-        return Transaction::whereHas('credit', function (Builder $query) {
-            $query->where('debtor_id', '=', $this->id)
-            ->orWhere('first_co_debtor', '=', $this->id)
-            ->orWhere('second_co_debtor', '=', $this->id);
-        })->take(5)->get();
     }
 
 }

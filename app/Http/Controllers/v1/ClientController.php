@@ -107,11 +107,6 @@ class ClientController extends Controller
      */
     public function show(Client $client)
     {
-
-        $client = Client::with([
-            'credits', 'credits_co_debtor', 'credits_second_debtor'
-        ])->where('id', $client->id)->firstOrFail();
-
         return response()->json(['client' => $client], 200);
     }
 
@@ -178,6 +173,6 @@ class ClientController extends Controller
 
     public function getTemplate()
     {
-        return asset('storage') . '/template.xls';
+        return response()->download(asset('templates') . '/template.xls');
     }
 }
