@@ -30,6 +30,8 @@ class CreditController extends Controller
 
         $per_page = isset($request->per_page) ? $request->per_page : 50;
 
+        $status = explode(',', $request->status);
+
         $credits = Credit::with(
             [
                 'transactions', 'account', 'documents', 'debtor', 'first_co_debtor', 'second_co_debtor', 'adviser',
@@ -38,7 +40,7 @@ class CreditController extends Controller
             ->byClient($request->client)
             ->byAdviser($request->adviser)
             ->byDate($request->start_date, $request->end_date)
-            ->byStatus($request->status)
+            ->byStatus($status)
             ->orderBy('created_at', 'desc')
             ->paginate($per_page);
 
