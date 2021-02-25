@@ -173,6 +173,8 @@ class ClientController extends Controller
 
     public function getTemplate()
     {
-        return response()->download(asset('templates') . '/template.xls');
+        $path = public_path('templates') . '/template.xls';
+
+        return response()->download($path);
     }
 }
