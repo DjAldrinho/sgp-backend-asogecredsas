@@ -31,8 +31,9 @@ class ProcessController extends Controller
             $status = explode(',', $request->status);
         }
 
-        $processes = Process::with('credit', 'lawyer')
-            ->byCredit($request->credit)
+        $processes = Process::with([
+            'lawyer', 'credit', 'credit.debtor', 'credit.first_co_debtor', 'credit.second_co_debtor'
+        ])->byCredit($request->credit)
             ->byLawyer($request->lawyer)
             ->byDate($request->start_date, $request->end_date)
             ->byStatus($status)
