@@ -81,7 +81,7 @@ class ClientController extends Controller
     public function createMassive(Request $request)
     {
         $request->validate([
-            'document' => 'required|file'
+            'document' => 'required|file|mimes:xlsx,xls'
         ]);
 
         try {

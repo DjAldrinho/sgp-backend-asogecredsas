@@ -30,7 +30,11 @@ class CreditController extends Controller
 
         $per_page = isset($request->per_page) ? $request->per_page : 50;
 
-        $status = explode(',', $request->status);
+        $status = null;
+
+        if ($request->status) {
+            $status = explode(',', $request->status);
+        }
 
         $credits = Credit::with(
             [
