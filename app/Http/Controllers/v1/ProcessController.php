@@ -121,4 +121,13 @@ class ProcessController extends Controller
             return response()->json(['message' => $exception->getMessage()]);
         }
     }
+
+    public function show(Process $process)
+    {
+        $process = Process::with([
+            'lawyer', 'credit', 'credit.debtor', 'credit.first_co_debtor', 'credit.second_co_debtor'
+        ])->where('id', $process->id)->firstOrFail();
+
+        return response()->json(['process' => $process]);
+    }
 }
