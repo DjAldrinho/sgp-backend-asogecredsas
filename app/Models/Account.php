@@ -51,4 +51,11 @@ class Account extends Model
 
         return number_format($retires->sum('value'), 2, '.', ',');
     }
+
+    public function scopeByStatus($query, $value)
+    {
+        if ($value) {
+            return $query->where('status', $value);
+        }
+    }
 }

@@ -10,6 +10,7 @@ use App\Models\Account;
 use App\Models\Credit;
 use App\Models\CreditDocument;
 use App\Services\AccountService;
+use App\Services\CountService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -55,6 +56,30 @@ class CreditController extends Controller
         $credits->appends(['per_page' => $per_page]);
 
         return response()->json(['credits' => $credits], 200);
+    }
+
+    public function getCreditsExpired(Request $request)
+    {
+        $request->validate([
+            'account' => 'integer|exists:accounts,id',
+            'start_date' => 'date',
+            'end_date' => 'date',
+            'per_page' => 'integer',
+            'client' => 'integer|exists:clients,id',
+            'first_co_debtor' => 'integer|exists:clients,id',
+            'second_co_debtor' => 'integer|exists:clients,id',
+        ]);
+
+        $per_page = isset($request->per_page) ? $request->per_page : 50;
+
+        $service = new CountService($request->start_date, $request->end_date);
+
+        return $service->getTotalCountExpiredCredits($request->account, $request->client, $request->first_co_debtor,
+            $request->second_co_debtor)
+            ->with(['account', 'documents', 'debtor', 'first_co_debtor', 'second_co_debtor', 'adviser',
+                'credit_type', 'payroll', 'credit_refinanced'])
+            ->paginate($per_page);
+
     }
 
     public function show(Credit $credit)
