@@ -26,7 +26,7 @@ class CreditService extends Service
         return Credit::with(
             [
                 'transactions', 'account', 'documents', 'debtor', 'first_co_debtor', 'second_co_debtor', 'adviser',
-                'credit_type', 'payroll', 'credit_refinanced'
+                'credit_type', 'payroll', 'credit_refinanced', 'approvalUser'
             ])->byAccount($request->account)
             ->byClient($request->client)
             ->byFirstCoDebtor($request->first_co_debtor)

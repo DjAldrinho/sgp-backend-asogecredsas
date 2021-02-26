@@ -19,8 +19,8 @@ class CreditHelper
         $total_interest = ($total * ($interest / 100)) * $fee;
         $total_credit = $total + $total_interest;
         $value_fee = $total_credit / $fee;
-        $credit['total_credit'] = number_format($total_credit, 2, '.', ',');
-        $credit['total_interest'] = number_format($total_interest, 2, '.', ',');
+        $credit['total_credit'] = $total_credit;
+        $credit['total_interest'] = $total_interest;
 
         $interest_value = $total_interest / $fee;
         $total_capital = 0;
@@ -31,10 +31,10 @@ class CreditHelper
                 $credit['fees'][] = [
                     'number' => $i,
                     'start_date' => $start_date->format('Y-m-d'),
-                    'capital_fee' => number_format(($capital_fee), 2, '.', ','),
-                    'interest_value' => number_format($interest_value, 2, '.', ','),
-                    'fee_value' => number_format($value_fee, 2, '.', ','),
-                    'capital_balance' => number_format(($total_credit -= $value_fee), 2, '.', ',')
+                    'capital_fee' => $capital_fee,
+                    'interest_value' => $interest_value,
+                    'fee_value' => $value_fee,
+                    'capital_balance' => ($total_credit -= $value_fee)
                 ];
 
                 $total_capital += $capital_fee;
@@ -42,7 +42,7 @@ class CreditHelper
             }
         }
 
-        $credit['total_capital'] = number_format($total_capital, 2, '.', ',');
+        $credit['total_capital'] = $total_capital;
 
 
         return !$getFullData ? $total_credit : $credit;

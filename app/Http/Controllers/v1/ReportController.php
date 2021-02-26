@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\v1;
 
-use App\Exports\ClientExportsExcel;
+use App\Exports\CreditsExportsExcel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -21,7 +21,7 @@ class ReportController extends Controller
 
         }
 
-        return Excel::download(new ClientExportsExcel($request), 'credits.xlsx');
+        return Excel::store(new CreditsExportsExcel($request), 'credits.xlsx');
 
     }
 }

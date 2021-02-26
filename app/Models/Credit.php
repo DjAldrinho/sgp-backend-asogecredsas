@@ -11,8 +11,8 @@ class Credit extends Model
     use HasFactory;
 
     protected $fillable = [
-        'code', 'payroll_id', 'credit_type_id', 'debtor_id', 'first_co_debtor', 'second_co_debtor',
-        'start_date', 'refinanced', 'capital_value', 'transport_value', 'other_value', 'interest',
+        'code', 'payroll_id', 'credit_type_id', 'debtor_id', 'first_co_debtor', 'second_co_debtor', 'approval_user',
+        'start_date', 'refinanced', 'capital_value', 'transport_value', 'other_value', 'interest', 'approval_date',
         'commission', 'fee', 'adviser_id', 'refinanced_id', 'status', 'account_id', 'commentary', 'payment', 'end_date'
     ];
 
@@ -52,6 +52,16 @@ class Credit extends Model
         return $this->belongsTo(Client::class, 'second_co_debtor');
     }
 
+    public function first_co_debtor_()
+    {
+        return $this->belongsTo(Client::class, 'first_co_debtor');
+    }
+
+    public function second_co_debtor_()
+    {
+        return $this->belongsTo(Client::class, 'second_co_debtor');
+    }
+
     public function adviser()
     {
         return $this->belongsTo(Adviser::class);
@@ -70,6 +80,11 @@ class Credit extends Model
     public function payroll()
     {
         return $this->belongsTo(Payroll::class);
+    }
+
+    public function approvalUser()
+    {
+        return $this->belongsTo(User::class, 'approval_user');
     }
 
 
@@ -157,6 +172,5 @@ class Credit extends Model
             return $query->where('adviser_id', $adviser);
         }
     }
-
 
 }

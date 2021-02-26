@@ -14,6 +14,7 @@ use App\Services\CountService;
 use App\Services\CreditService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class CreditController extends Controller
 {
@@ -81,7 +82,7 @@ class CreditController extends Controller
     {
         $credit = Credit::with(
             [
-                'transactions', 'account', 'documents', 'debtor', 'first_co_debtor',
+                'transactions', 'account', 'documents', 'debtor', 'first_co_debtor', 'approvalUser',
                 'second_co_debtor', 'adviser', 'credit_type', 'payroll', 'credit_refinanced'
             ])->where('id', $credit->id)->firstOrFail();
 
@@ -241,7 +242,7 @@ class CreditController extends Controller
         $request->validate([
             'credit_id' => 'required|integer|exists:credits,id',
             'files' => 'required',
-            'files.*' => 'mimes:doc,pdf,docx,zip,jpeg,jpg,png',
+            'files.*' => 'mimes:doc,pdf,docx,zip,jpeg,jpg,png,xls,xlsx',
             'commentary' => 'string'
         ]);
 
@@ -258,6 +259,8 @@ class CreditController extends Controller
 
 
                     $credit->status = 'A';
+                    $credit->approval_date = date('Y-m-d');
+                    $credit->approval_user = Auth::id();
 
                     if ($request->hasFile('files')) {
                         foreach ($request->file('files') as $key => $file) {
@@ -308,7 +311,7 @@ class CreditController extends Controller
             'transport_value' => 'numeric',
             'fee' => 'integer',
             'files' => 'required',
-            'files.*' => 'mimes:doc,pdf,docx,zip,jpeg,jpg,png',
+            'files.*' => 'mimes:doc,pdf,docx,zip,jpeg,jpg,png,xls,xlsx',
         ]);
 
         try {
