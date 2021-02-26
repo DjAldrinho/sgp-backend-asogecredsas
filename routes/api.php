@@ -104,7 +104,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('deposit', [CreditController::class, 'deposit']);
         Route::post('refinance', [CreditController::class, 'refinance']);
         Route::post('add-commentary', [CreditController::class, 'addCommentary']);
-        Route::delete('delete-document/{document}', [CreditController::class, 'removeDocument']);
+//        Route::delete('delete-document/{document}', [CreditController::class, 'removeDocument']);
     });
 
     Route::group(['prefix' => 'credit-types'], function () {

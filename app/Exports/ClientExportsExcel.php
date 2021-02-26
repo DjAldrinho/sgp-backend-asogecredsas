@@ -19,18 +19,22 @@ class ClientExportsExcel implements FromCollection, WithHeadings, ShouldQueue
     /**
      * ClientExportsExcel constructor.
      * @param $request
-     * @param CreditService $creditService
      */
-    public function __construct($request, CreditService $creditService)
+    public function __construct($request)
     {
         $this->request = $request;
-        $this->creditService = $creditService;
+        $this->creditService = new CreditService();
     }
 
 
     public function collection()
     {
+        $data = [];
+
         $credits = $this->creditService->getCredits($this->request)->get();
+
+        return collect($data);
+
     }
 
     public function headings(): array

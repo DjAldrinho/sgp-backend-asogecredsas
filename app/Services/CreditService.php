@@ -7,8 +7,13 @@ namespace App\Services;
 use App\Models\Credit;
 use Illuminate\Http\Request;
 
-class CreditService
+class CreditService extends Service
 {
+
+    public function __constructor()
+    {
+        parent::__constructor();
+    }
 
     public function getCredits(Request $request)
     {

@@ -11,16 +11,15 @@ class FileManager
      * Upload Public Files on /storage/$path
      * @param $file
      * @param $path
+     * @param null $key
      * @return bool|string
      */
-    public static function uploadPublicFiles($file, $path)
+    public static function uploadPublicFiles($file, $path, $key = null)
     {
-        $i = 1;
-
         try {
             if (isset($file)) {
                 $extension = $file->extension();
-                $fileName = (time() + $i) . '.' . $extension;
+                $fileName = (time() + $key) . '.' . $extension;
                 $file->move(public_path('storage/' . $path), $fileName);
                 return $path . '/' . $fileName;
             }

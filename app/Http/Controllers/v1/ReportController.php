@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Exports\ClientExportsExcel;
 use App\Http\Controllers\Controller;
-use App\Services\CreditService;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
-    private $creditService;
-
-    /**
-     * CreditController constructor.
-     * @param CreditService $creditService
-     */
-    public function __construct(CreditService $creditService)
-    {
-        $this->creditService = $creditService;
-    }
-
     public function credits(Request $request)
     {
-        $credits = $this->creditService->getCredits($request);
+        $request->validate(
+            [
+                'type' => 'string|required|in:pdf,excel'
+            ]
+        );
+
+        if ($request->type == 'pdf') {
+
+        }
+
+        return Excel::download(new ClientExportsExcel($request), 'credits.xlsx');
+
     }
 }

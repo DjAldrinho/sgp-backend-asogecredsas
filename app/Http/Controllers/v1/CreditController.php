@@ -261,7 +261,11 @@ class CreditController extends Controller
 
                     if ($request->hasFile('files')) {
                         foreach ($request->file('files') as $key => $file) {
-                            $documents[$key] = new CreditDocument(['document_file' => FileManager::uploadPublicFiles($file, 'documents_credits')]);
+                            $documents[$key] = new CreditDocument(['document_file' => FileManager::uploadPublicFiles($file, 'documents_credits', $key)]);
+                        }
+
+                        if (count($documents) > 0) {
+                            $credit->documents()->saveMany($documents);
                         }
                     }
 
@@ -276,7 +280,6 @@ class CreditController extends Controller
                     $credit->commentary = $request->commentary;
 
                     $credit->save();
-                    $credit->documents()->saveMany($documents);
                     $credit->refresh();
 
                     AccountService::updateAccount($account, $credit->capital_value, 'sub');
@@ -303,7 +306,9 @@ class CreditController extends Controller
             'credit_id' => 'required|integer|exists:credits,id',
             'capital_value' => 'required|numeric',
             'transport_value' => 'numeric',
-            'fee' => 'integer'
+            'fee' => 'integer',
+            'files' => 'required',
+            'files.*' => 'mimes:doc,pdf,docx,zip,jpeg,jpg,png',
         ]);
 
         try {
@@ -312,7 +317,7 @@ class CreditController extends Controller
 
 
             if ($credit->status == 'A') {
-
+                $documents = [];
                 $account = Account::find($credit->account_id);
 
                 if ($account && $account->value > 0) {
@@ -351,6 +356,16 @@ class CreditController extends Controller
                         "start_date" => $date,
                         'payment' => $total_credit
                     ]);
+
+                    if ($request->hasFile('files')) {
+                        foreach ($request->file('files') as $key => $file) {
+                            $documents[$key] = new CreditDocument(['document_file' => FileManager::uploadPublicFiles($file, 'documents_credits', $key)]);
+                        }
+
+                        if (count($documents) > 0) {
+                            $new_credit->documents()->saveMany($documents);
+                        }
+                    }
 
                     $credit->status = 'F';
                     $credit->end_date = date('Y-m-d');
