@@ -60,7 +60,6 @@ class CreditsExportsExcel implements FromCollection, WithHeadings, WithPropertie
                     $credit->fee,
                     $credit->liquidate['total_credit'],
                     $credit->payment,
-                    ($credit->liquidate['total_credit'] - $credit->payment),
                     ($credit->adviser) ? $credit->adviser->name : '',
                     $credit->commission,
                     ($credit->approvalUser) ? $credit->approvalUser->name : ''
@@ -91,7 +90,7 @@ class CreditsExportsExcel implements FromCollection, WithHeadings, WithPropertie
         return [
             'No. Credito', 'Pagaduria', 'Tipo', 'Fecha Inicio', 'Fecha Aprobacion', 'Fecha Finalizacion', 'Titular',
             'Primer Codeudor', 'Segundo Codeudor', 'Valor Capital', 'Valor Transporte', 'Otros Valores',
-            '% Interes', 'Total Intereses', 'Valor Cuota', 'Plazo', 'Total Credito', 'Abono', 'Saldo',
+            '% Interes', 'Total Intereses', 'Valor Cuota', 'Plazo', 'Total Credito', 'Saldo',
             'Asesor', '% Comision', 'Aprobado por'
         ];
     }
