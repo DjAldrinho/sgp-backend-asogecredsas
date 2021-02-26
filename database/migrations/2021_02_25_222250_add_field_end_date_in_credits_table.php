@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddFieldCodeInProcessesTable extends Migration
+class AddFieldEndDateInCreditsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class AddFieldCodeInProcessesTable extends Migration
      */
     public function up()
     {
-        Schema::table('processes', function (Blueprint $table) {
-            if (!Schema::hasColumn('processes', 'code')) {
-                $table->string('code')->unique();
-            }
+        Schema::table('credits', function (Blueprint $table) {
+            $table->date('end_date')->nullable();
         });
     }
 
@@ -27,8 +25,8 @@ class AddFieldCodeInProcessesTable extends Migration
      */
     public function down()
     {
-        Schema::table('processes', function (Blueprint $table) {
-            $table->removeColumn('code');
+        Schema::table('credits', function (Blueprint $table) {
+            $table->removeColumn('end_date');
         });
     }
 }

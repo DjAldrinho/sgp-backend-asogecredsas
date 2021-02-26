@@ -11,11 +11,23 @@ use App\Models\Credit;
 use App\Models\CreditDocument;
 use App\Services\AccountService;
 use App\Services\CountService;
+use App\Services\CreditService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class CreditController extends Controller
 {
+
+    private $creditService;
+
+    /**
+     * CreditController constructor.
+     * @param CreditService $creditService
+     */
+    public function __construct(CreditService $creditService)
+    {
+        $this->creditService = $creditService;
+    }
 
     public function index(Request $request)
     {
@@ -33,24 +45,7 @@ class CreditController extends Controller
 
         $per_page = isset($request->per_page) ? $request->per_page : 50;
 
-        $status = null;
-
-        if ($request->status) {
-            $status = explode(',', $request->status);
-        }
-
-        $credits = Credit::with(
-            [
-                'transactions', 'account', 'documents', 'debtor', 'first_co_debtor', 'second_co_debtor', 'adviser',
-                'credit_type', 'payroll', 'credit_refinanced'
-            ])->byAccount($request->account)
-            ->byClient($request->client)
-            ->byFirstCoDebtor($request->first_co_debtor)
-            ->bySecondCoDebtor($request->second_co_debtor)
-            ->byAdviser($request->adviser)
-            ->byDate($request->start_date, $request->end_date)
-            ->byStatus($status)
-            ->orderBy('created_at', 'desc')
+        $credits = $this->creditService->getCredits($request)
             ->paginate($per_page);
 
         $credits->appends(['per_page' => $per_page]);
@@ -183,6 +178,7 @@ class CreditController extends Controller
                     $credit->payment = $credit->payment - $request->value;
                     if ($credit->payment <= 0) {
                         $credit->status = 'F';
+                        $credit->end_date = date('Y-m-d');
                     }
                     $credit->save();
                     $credit->refresh();
@@ -198,6 +194,7 @@ class CreditController extends Controller
                         'credit' => $credit]);
                 } else {
                     $credit->status = 'F';
+                    $credit->end_date = date('Y-m-d');
                     $credit->save();
                     $credit->refresh();
                     return response()->json(['message' => 'No se puede abonar a un credito finalizado'], Response::HTTP_BAD_REQUEST);
@@ -356,6 +353,7 @@ class CreditController extends Controller
                     ]);
 
                     $credit->status = 'F';
+                    $credit->end_date = date('Y-m-d');
                     $credit->refinanced = true;
                     $credit->refinanced_id = $new_credit->id;
                     $credit->save();
@@ -410,6 +408,7 @@ class CreditController extends Controller
     {
         if ($credit->status == 'P') {
             $credit->status = 'C';
+            $credit->end_date = date('Y-m-d');
             $credit->save();
             $credit->refresh();
 

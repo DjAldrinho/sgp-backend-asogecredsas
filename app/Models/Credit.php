@@ -13,7 +13,7 @@ class Credit extends Model
     protected $fillable = [
         'code', 'payroll_id', 'credit_type_id', 'debtor_id', 'first_co_debtor', 'second_co_debtor',
         'start_date', 'refinanced', 'capital_value', 'transport_value', 'other_value', 'interest',
-        'commission', 'fee', 'adviser_id', 'refinanced_id', 'status', 'account_id', 'commentary', 'payment'
+        'commission', 'fee', 'adviser_id', 'refinanced_id', 'status', 'account_id', 'commentary', 'payment', 'end_date'
     ];
 
     protected $appends = ['liquidate', 'totals'];
@@ -83,9 +83,7 @@ class Credit extends Model
     public function scopeByClient($query, $client)
     {
         if ($client) {
-            return $query->where('debtor_id', '=', $client)
-                ->orWhere('first_co_debtor', '=', $client)
-                ->orWhere('second_co_debtor', '=', $client);
+            return $query->where('debtor_id', '=', $client);
         }
     }
 

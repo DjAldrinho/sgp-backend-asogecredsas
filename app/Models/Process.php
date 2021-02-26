@@ -52,7 +52,7 @@ class Process extends Model
         }
 
         if ($end_date) {
-            $query->where('end_date', '<=', "$end_date 23:59:59");
+            $query->where('created_at', '<=', "$end_date 23:59:59");
         }
 
         return $query;

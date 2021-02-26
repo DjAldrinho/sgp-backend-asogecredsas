@@ -11,6 +11,7 @@ use App\Http\Controllers\v1\DashboardController;
 use App\Http\Controllers\v1\LawyerController;
 use App\Http\Controllers\v1\PayrollController;
 use App\Http\Controllers\v1\ProcessController;
+use App\Http\Controllers\v1\ReportController;
 use App\Http\Controllers\v1\SupplierController;
 use App\Http\Controllers\v1\TransactionController;
 use App\Http\Controllers\v1\TypeTransactionController;
@@ -86,6 +87,10 @@ Route::middleware('auth:api')->group(function () {
 
     Route::group(['prefix' => 'dashboard'], function () {
         Route::get('all', [DashboardController::class, 'index']);
+    });
+
+    Route::group(['prefix' => 'report'], function () {
+        Route::get('credits', [ReportController::class, 'credits']);
     });
 
     Route::group(['prefix' => 'credits'], function () {
