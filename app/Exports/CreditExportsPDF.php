@@ -27,8 +27,18 @@ class CreditExportsPDF
     {
         $credits = $this->creditService->getCredits($request)->get();
 
-        $pdf = \PDF::loadView('pdf.credits', ['credits' => $credits])->setPaper('letter', 'landscape');
 
-        return $pdf->download('credits.pdf');
+        $pdf = \PDF::loadView('pdf.credits', [
+            'credits' => $credits,
+            'total_capital' => $credits->sum('capital_value'),
+            'total_interest' => $credits->sum('liquidate.total_interest'),
+            'fee_value' => $credits->sum('liquidate.fees.0.fee_value'),
+            'total_credit' => $credits->sum('liquidate.total_credit'),
+            'total_payment' => $credits->sum('payment'),
+        ])->setPaper('letter', 'landscape');
+
+//        return $pdf->download('credits.pdf');
+
+        $pdf->save(storage_path('app/public/') . 'archivo.pdf');
     }
 }

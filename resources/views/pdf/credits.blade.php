@@ -15,6 +15,10 @@
             border: 1px solid black;
         }
 
+        th {
+            font-weight: bold;
+        }
+
         td, th {
             border: 1px solid black;
             font-size: 8px;
@@ -27,6 +31,8 @@
     </style>
 </head>
 <body>
+<h1 style="text-align: center">Lista de Creditos</h1>
+<p>Listando: {{count($credits)}} Creditos</p>
 <table style="width:100%">
     <tr>
         <th>No. Credito</th>
@@ -54,15 +60,25 @@
                 <td>{{($credit->approval_date) ? $credit->approval_date : ''}}</td>
                 <td>{{($credit->end_date) ? $credit->end_date : ''}}</td>
                 <td>{{$credit->debtor->name}}</td>
-                <td>{{ $credit->capital_value}}</td>
-                <td>{{$credit->liquidate['total_interest']}}</td>
-                <td>{{$credit->liquidate['fees'][0]['fee_value']}}</td>
+                <td>${{number_format($credit->capital_value, 2, '.', ',')}}</td>
+                <td>${{number_format($credit->liquidate['total_interest'], 2, '.', ',')}}</td>
+                <td>${{number_format($credit->liquidate['fees'][0]['fee_value'], 2, '.', ',')}}</td>
                 <td>{{$credit->fee}}</td>
-                <td>{{$credit->liquidate['total_credit']}}</td>
-                <td>{{$credit->payment}}</td>
+                <td>${{number_format($credit->liquidate['total_credit'], 2, '.', ',')}}</td>
+                <td>${{number_format($credit->payment, 2, '.', ',')}}</td>
                 <td>{{($credit->adviser) ? $credit->adviser->name : ''}}</td>
             </tr>
         @endforeach
+        <tr>
+            <td style="font-weight: bold;font-size: 10px" colspan="7">Total</td>
+            <td style="font-weight: bold;font-size: 10px">${{number_format($total_capital, 2, '.', ',')}}</td>
+            <td style="font-weight: bold;font-size: 10px">${{number_format($total_interest, 2, '.', ',')}}</td>
+            <td style="font-weight: bold;font-size: 10px">${{number_format($fee_value, 2, '.', ',')}}</td>
+            <td></td>
+            <td style="font-weight: bold;font-size: 10px">${{number_format($total_credit, 2, '.', ',')}}</td>
+            <td style="font-weight: bold;font-size: 10px">${{number_format($total_payment, 2, '.', ',')}}</td>
+            <td></td>
+        </tr>
     @else
         <tr>
             <td colspan="14">
