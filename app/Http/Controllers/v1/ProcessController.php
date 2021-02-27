@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Jobs\StoreTransaction;
 use App\Models\Credit;
 use App\Models\Process;
-use App\Services\AccountService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -102,10 +101,8 @@ class ProcessController extends Controller
                     $process->save();
                     $process->refresh();
 
-                    AccountService::updateAccount($credit->account, $request->value, 'add');
                     StoreTransaction::dispatchSync($credit->account->id, 'process_payment', $request->value,
                         'Abono de procceso #' . $process->code, 3, 4, null, $process->id);
-
 
                     $payment = number_format(($process->payment), 2, '.', ',');
 

@@ -109,6 +109,7 @@ class CreditController extends Controller
             'start_date' => 'required|date'
         ]);
 
+
         try {
 
             $account = Account::find($request->account_id);
@@ -116,6 +117,15 @@ class CreditController extends Controller
             if ($account && $account->value > 0) {
 
                 $count = Credit::count() + 1;
+
+
+                if ($count < 10) {
+                    $count = '000' . $count;
+                } elseif ($count < 100) {
+                    $count = '00' . $count;
+                } elseif ($count < 1000) {
+                    $count = '0' . $count;
+                }
 
                 $data = [
                     "interest" => $request->interest,
@@ -131,7 +141,7 @@ class CreditController extends Controller
 
 
                 $credit = Credit::create([
-                    'code' => 'C' . time() . '-' . $count,
+                    'code' => 'C' . '-' . $count,
                     'payroll_id' => $request->payroll_id,
                     'credit_type_id' => $request->credit_type_id,
                     'debtor_id' => $request->debtor_id,
@@ -253,7 +263,9 @@ class CreditController extends Controller
             $credit = Credit::find($request->credit_id);
             $account = Account::find($credit->account_id);
 
-            if ($account && $account->value > 0) {
+            $total_credit = $credit->capital_value + $credit->transport_value + $credit->other_value;
+
+            if (($account && $account->value > 0) && ($total_credit < $account->value)) {
                 if ($credit->status == 'P') {
                     $total = $credit->capital_value + $credit->transport_value + $credit->other_value;
 
@@ -287,7 +299,7 @@ class CreditController extends Controller
 
                     AccountService::updateAccount($account, $credit->capital_value, 'sub');
 
-                    StoreTransaction::dispatchSync($account->id, 'credit', -abs($credit->capital_value),
+                    StoreTransaction::dispatchSync($account->id, 'credit', -abs($total_credit),
                         'Desembolso de Credito', 3, $credit->credit_type_id, $credit->id);
 
 
@@ -323,9 +335,19 @@ class CreditController extends Controller
                 $documents = [];
                 $account = Account::find($credit->account_id);
 
-                if ($account && $account->value > 0) {
+                $total = $request->capital_value + $request->transport_value;
+
+                if (($account && $account->value > 0) && ($total < $account->value)) {
 
                     $count = Credit::count() + 1;
+
+                    if ($count < 10) {
+                        $count = '000' . $count;
+                    } elseif ($count < 100) {
+                        $count = '00' . $count;
+                    } elseif ($count < 1000) {
+                        $count = '0' . $count;
+                    }
 
                     $fee = $request->fee ? $request->fee : $credit->fee;
 
@@ -343,7 +365,7 @@ class CreditController extends Controller
                     $total_credit = CreditHelper::liquidate($data, false);
 
                     $new_credit = Credit::create([
-                        'code' => 'C' . time() . '-' . $count,
+                        'code' => 'C' . '-' . $count,
                         'payroll_id' => $credit->payroll_id,
                         'credit_type_id' => $credit->credit_type_id,
                         'debtor_id' => $credit->debtor_id,
@@ -374,11 +396,13 @@ class CreditController extends Controller
                     $credit->end_date = date('Y-m-d');
                     $credit->refinanced = true;
                     $credit->refinanced_id = $new_credit->id;
+                    $credit->refinanced_date = date('Y-m-d');
+                    $credit->refinanced_user = Auth::id();
                     $credit->save();
 
                     AccountService::updateAccount($account, $new_credit->capital_value, 'sub');
 
-                    StoreTransaction::dispatchSync($account->id, 'credit', -abs($new_credit->capital_value),
+                    StoreTransaction::dispatchSync($account->id, 'credit', -abs($new_credit->capital_value + $new_credit->transport_value),
                         'Desembolso de Credito refinanciado', 3, $credit->credit_type_id, $new_credit->id);
 
                     return response()->json(['message' => 'Credito renovado correctamente',
