@@ -27,6 +27,5 @@ class ReportController extends Controller
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
         }
-
     }
 }

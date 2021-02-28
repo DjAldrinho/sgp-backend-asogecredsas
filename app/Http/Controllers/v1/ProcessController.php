@@ -36,6 +36,7 @@ class ProcessController extends Controller
             ->byLawyer($request->lawyer)
             ->byDate($request->start_date, $request->end_date)
             ->byStatus($status)
+            ->orderBy('id', 'desc')
             ->paginate($per_page);
 
         $processes->appends(['per_page' => $per_page]);

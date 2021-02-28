@@ -37,8 +37,7 @@ class CreditExportsPDF
             'total_payment' => $credits->sum('payment'),
         ])->setPaper('letter', 'landscape');
 
-//        return $pdf->download('credits.pdf');
+        return $pdf->download('credits.pdf');
 
-        $pdf->save(storage_path('app/public/') . 'archivo.pdf');
     }
 }

@@ -18,7 +18,7 @@ class LawyerController extends Controller
     {
         $per_page = isset($request->per_page) ? $request->per_page : 50;
 
-        $lawyers = Lawyer::paginate($per_page);
+        $lawyers = Lawyer::orderBy('name')->paginate($per_page);
 
         $lawyers->appends(['per_page' => $per_page]);
 
