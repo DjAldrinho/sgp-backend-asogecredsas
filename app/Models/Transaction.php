@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -110,6 +111,24 @@ class Transaction extends Model
     {
         if ($process) {
             return $query->where('process_id', $process);
+        }
+    }
+
+    public function scopeByClient($query, $client)
+    {
+        if ($client) {
+            return $query->whereHas('credit', function (Builder $query) use ($client) {
+                $query->where('debtor_id', $client);
+            });
+        }
+    }
+
+    public function scopeByAdviser($query, $adviser)
+    {
+        if ($adviser) {
+            return $query->whereHas('credit', function (Builder $query) use ($adviser) {
+                $query->where('adviser_id', $adviser);
+            });
         }
     }
 }
