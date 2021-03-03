@@ -4,6 +4,7 @@
 namespace App\Exports;
 
 
+use App\Helpers\TransactionHelper;
 use App\Services\TransactionService;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -45,7 +46,7 @@ class TransactionsExportsExcel implements FromCollection, WithHeadings, WithProp
                     $transaction->code,
                     ($transaction->account) ? $transaction->account->account_number . ' - ' . $transaction->account->name : '',
                     ($transaction->credit) ? $transaction->credit->code . ' - ' . $transaction->credit->debtor->name : '',
-                    $this->getOriginName($transaction->origin),
+                    TransactionHelper::getOriginName($transaction->origin),
                     $transaction->value,
                     ($transaction->credit_type) ? $transaction->credit_type->name : '',
                     Carbon::parse($transaction->created_at)->isoFormat('DD/MM/Y'),
@@ -99,21 +100,5 @@ class TransactionsExportsExcel implements FromCollection, WithHeadings, WithProp
         ];
     }
 
-    private function getOriginName($value)
-    {
-        switch ($value) {
-            case "credit":
-                return 'Desembolso de credito';
-            case "commission":
-                return "Pago de comision";
-            case "credit_payment":
-                return "Abono de credito";
-            case "deposit":
-                return "Abono de cuenta";
-            case "retire":
-                return "Retiro de cuenta";
-            default:
-                return "Otro";
-        }
-    }
+
 }

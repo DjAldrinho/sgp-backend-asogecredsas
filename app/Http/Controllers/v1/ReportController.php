@@ -5,6 +5,7 @@ namespace App\Http\Controllers\v1;
 use App\Exports\CreditExportsPDF;
 use App\Exports\CreditsExportsExcel;
 use App\Exports\TransactionsExportsExcel;
+use App\Exports\TransactionsExportsPDF;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -40,7 +41,7 @@ class ReportController extends Controller
 
         try {
             if ($request->type == 'pdf') {
-                // return CreditExportsPDF::handle($request);
+                return TransactionsExportsPDF::handle($request);
             }
             return Excel::store(new TransactionsExportsExcel($request), 'transactions.xlsx');
         } catch (\Exception $exception) {
