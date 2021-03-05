@@ -7,6 +7,7 @@ use App\Jobs\StoreTransaction;
 use App\Models\Account;
 use App\Services\AccountService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class AccountController extends Controller
 {
@@ -79,6 +80,9 @@ class AccountController extends Controller
             $account = Account::firstWhere(['id' => $request->account_id]);
 
             if ($request->type === 'retire') {
+                if ($amount > $amount->value) {
+                    return response()->json(['message' => 'No tiene saldo en la cuenta #' . $account->id . ' - ' . $account->name], Response::HTTP_BAD_REQUEST);
+                }
                 $amount = -abs($amount);
             }
 

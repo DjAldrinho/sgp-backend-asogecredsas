@@ -34,6 +34,7 @@ class CreditService extends Service
             ->byAdviser($request->adviser)
             ->byDate($request->start_date, $request->end_date)
             ->byStatus($status)
+            ->ByRefinanced($request->refinanced)
             ->orderBy('created_at', 'desc');
     }
 }

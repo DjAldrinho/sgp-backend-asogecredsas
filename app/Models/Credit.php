@@ -174,4 +174,11 @@ class Credit extends Model
         }
     }
 
+    public function scopeByRefinanced($query, $value)
+    {
+        if ($value) {
+            return $query->where('refinanced', $value);
+        }
+    }
+
 }
