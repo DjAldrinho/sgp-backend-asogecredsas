@@ -50,10 +50,10 @@
 <body>
 <div>
     <div id="watermark">
-        <img src="{{public_path('storage/pdf/logo.jpg')}}" height="100%" width="100%"/>
+        <img src="{{public_path('pdf/logo.jpg')}}" height="100%" width="100%"/>
     </div>
     <div style="text-align: right">
-        <img src="{{public_path('storage/pdf/logo2.png')}}" style="width: 200px">
+        <img src="{{public_path('pdf/logo2.png')}}" style="width: 200px">
     </div>
     <div style="margin-top: 2em">
         <p>Cartagena, {{\Carbon\Carbon::now()->format('d \\d\\e M \\d\\e Y')}}</p>
@@ -72,7 +72,7 @@
     <div style="margin-top: 5em;text-align: center">
         <div style="width: 200px;text-align: left;">
             <div style="border-bottom: 2px solid black">
-                <img src="{{public_path('storage/pdf/Firma.png')}}" style="width: 100px">
+                <img src="{{public_path('pdf/Firma.png')}}" style="width: 100px">
             </div>
             <br>
             <b>YULIANA GUARDO JIMENEZ <br>

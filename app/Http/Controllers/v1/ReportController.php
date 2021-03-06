@@ -72,7 +72,7 @@ class ReportController extends Controller
             /*\PDF::loadView('pdf.peace', ['credit' => $data])
                 ->save(storage_path('app/public/') . 'archivo4.pdf');*/
 
-            return \PDF::loadView('pdf.credit', ['credit' => $data])
+            return \PDF::loadView('pdf.peace', ['credit' => $data])
                 ->download("Certificado de Paz y Salvo Credito #{$data->code} - {$data->debtor->name}.pdf");
 
         } catch (\Exception $exception) {
