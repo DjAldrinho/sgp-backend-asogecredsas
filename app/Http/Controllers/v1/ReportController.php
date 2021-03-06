@@ -61,7 +61,7 @@ class ReportController extends Controller
             $data = Credit::with(['debtor', 'credit_type'])->where('id', $request->credit_id)->first();
 
             return \PDF::loadView('pdf.credit', ['credit' => $data])
-                ->download("Certificado de credito {$data->code} - {$data->debtor->name}.pdf");
+                ->download("Certificado de credito #{$data->code} - {$data->debtor->name}.pdf");
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
         }
@@ -77,11 +77,11 @@ class ReportController extends Controller
 
             $data = Credit::with(['debtor', 'credit_type', 'payroll'])->where('id', $request->credit_id)->first();
 
-            \PDF::loadView('pdf.peace', ['credit' => $data])
-                ->save(storage_path('app/public/') . 'archivo4.pdf');
+            /*\PDF::loadView('pdf.peace', ['credit' => $data])
+                ->save(storage_path('app/public/') . 'archivo4.pdf');*/
 
-            /*return \PDF::loadView('pdf.credit', ['credit' => $data])
-                ->download("Certificado de Paz y Salvo {$data->code} - {$data->debtor->name}.pdf");*/
+            return \PDF::loadView('pdf.credit', ['credit' => $data])
+                ->download("Certificado de Paz y Salvo Credito #{$data->code} - {$data->debtor->name}.pdf");
 
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 409);
