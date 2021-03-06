@@ -50,15 +50,11 @@ class ReportController extends Controller
         }
     }
 
-    public function creditReport(Request $request)
+    public function creditReport(Credit $credit)
     {
-        $request->validate([
-            'credit_id' => 'required|integer|exists:credits,id'
-        ]);
-
         try {
 
-            $data = Credit::with(['debtor', 'credit_type'])->where('id', $request->credit_id)->first();
+            $data = Credit::with(['debtor', 'credit_type'])->where('id', $credit->id)->first();
 
             return \PDF::loadView('pdf.credit', ['credit' => $data])
                 ->download("Certificado de credito #{$data->code} - {$data->debtor->name}.pdf");
@@ -67,15 +63,11 @@ class ReportController extends Controller
         }
     }
 
-    public function peaceAndSave(Request $request)
+    public function peaceAndSave(Credit $credit)
     {
-        $request->validate([
-            'credit_id' => 'required|integer|exists:credits,id',
-        ]);
-
         try {
 
-            $data = Credit::with(['debtor', 'credit_type', 'payroll'])->where('id', $request->credit_id)->first();
+            $data = Credit::with(['debtor', 'credit_type', 'payroll'])->where('id', $credit->id)->first();
 
             /*\PDF::loadView('pdf.peace', ['credit' => $data])
                 ->save(storage_path('app/public/') . 'archivo4.pdf');*/

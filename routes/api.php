@@ -92,8 +92,8 @@ Route::middleware('auth:api')->group(function () {
     Route::group(['prefix' => 'report'], function () {
         Route::get('credits', [ReportController::class, 'credits']);
         Route::get('transactions', [ReportController::class, 'transactions']);
-        Route::get('creditReport', [ReportController::class, 'creditReport']);
-        Route::get('peace', [ReportController::class, 'peaceAndSave']);
+        Route::get('creditReport/{credit}', [ReportController::class, 'creditReport']);
+        Route::get('peace/{credit}', [ReportController::class, 'peaceAndSave']);
     });
 
     Route::group(['prefix' => 'credits'], function () {
