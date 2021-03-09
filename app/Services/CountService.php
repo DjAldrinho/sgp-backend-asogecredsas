@@ -36,14 +36,14 @@ class CountService
         $ids_credit = Transaction::select('credit_id')
             ->byOrigin('credit_payment')
             ->byAccount($account)
-            ->byDate($this->start_date, $this->end_date)
+         //   ->byDate($this->start_date, $this->end_date)
             ->whereNotNull('credit_id')
             ->distinct()
             ->pluck('credit_id')->all();
 
         return Credit::where('status', 'A')
             ->byAccount($account)
-            ->byDate($this->start_date, $this->end_date)
+          //  ->byDate($this->start_date, $this->end_date)
             ->byClient($client)
             ->byFirstCoDebtor($first_co_debtor)
             ->bySecondCoDebtor($second_co_debtor)
