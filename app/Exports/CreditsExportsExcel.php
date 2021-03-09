@@ -79,7 +79,6 @@ class CreditsExportsExcel implements FromCollection, WithHeadings, WithPropertie
             '',
             '=SUM(Q2:Q' . $count . ')',
             '=SUM(R2:R' . $count . ')',
-            '=SUM(S2:S' . $count . ')',
         ]);
 
         return collect($data);
