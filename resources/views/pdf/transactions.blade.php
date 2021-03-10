@@ -51,7 +51,7 @@
                 <td>{{($transaction->account) ? $transaction->account->account_number . ' - ' . $transaction->account->name : ''}}</td>
                 <td>{{($transaction->credit) ? $transaction->credit->code . ' - ' . $transaction->credit->debtor->name : ''}}</td>
                 <td>{{\App\Helpers\TransactionHelper::getOriginName($transaction->origin)}}</td>
-                <td>{{$transaction->value}}</td>
+                <td>{{number_format($transaction->value, 2, '.', ',')}}</td>
                 <td> {{($transaction->credit_type) ? $transaction->credit_type->name : ''}}</td>
                 <td>{{ \Carbon\Carbon::parse($transaction->created_at)->isoFormat('DD/MM/Y')}}</td>
                 <td>{{$transaction->commentary}}</td>
