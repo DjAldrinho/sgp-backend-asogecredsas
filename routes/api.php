@@ -52,7 +52,7 @@ Route::middleware('auth:api')->group(function () {
     Route::group(['prefix' => 'lawyers', 'middleware' => 'validate_admin'], function () {
         Route::get('all', [LawyerController::class, 'index']);
         Route::get('info/{lawyer}', [LawyerController::class, 'show']);
-        Route::patch('update/{lawyer}', [LawyerController::class, 'update']);
+        Route::post('update/{lawyer}', [LawyerController::class, 'update']);
         Route::post('create', [LawyerController::class, 'create']);
         Route::delete('delete/{lawyer}', [LawyerController::class, 'destroy']);
     });
