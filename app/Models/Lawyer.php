@@ -45,4 +45,12 @@ class Lawyer extends Model
     {
         return $this->hasMany(Process::class);
     }
+
+    public function scopeByNameOrDocument($query, $value)
+    {
+        if ($value) {
+            return $query->where('document_number', 'like', '%' . $value . '%')
+                ->orWhere('name', 'ilike', '%' . $value . '%');
+        }
+    }
 }
