@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class UserAdminSeeder extends Seeder
@@ -27,7 +28,7 @@ class UserAdminSeeder extends Seeder
                 'email_verified_at' => now(),
                 'document_type' => 'cc',
                 'document_number' => $user["document_number"],
-                'password' => bcrypt('Adm!n'),
+                'password' => Hash::make('Adm!n'),
                 'remember_token' => Str::random(10),
                 'is_administrator' => true
             ]);
