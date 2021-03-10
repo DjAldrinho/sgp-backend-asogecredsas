@@ -28,7 +28,7 @@ class UserAdminSeeder extends Seeder
                 'email_verified_at' => now(),
                 'document_type' => 'cc',
                 'document_number' => $user["document_number"],
-                'password' => Hash::make('Adm!n'),
+                'password' => bcrypt('Adm!n'),
                 'remember_token' => Str::random(10),
                 'is_administrator' => true
             ]);
