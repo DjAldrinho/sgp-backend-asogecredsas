@@ -17,7 +17,7 @@ class UserAdminSeeder extends Seeder
     {
 
         $users = [
-            ['name' => 'Alex Galeano', 'email' => 'alexg@gmail.com', 'document_number' => 1234567891],
+            ['name' => 'Alex Galeano', 'email' => 'alexhgaleanoc@gmail.com', 'document_number' => 1234567891],
         ];
 
         foreach ($users as $key => $user) {
