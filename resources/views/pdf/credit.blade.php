@@ -60,7 +60,7 @@
     </div>
     <div style="margin-top: 0.50em">
         <h2 style="text-align: center;margin-top: 2em;font-weight: bold">A QUIEN INTERESE</h2>
-        <p style="margin-top: 3em"> Certificamos que CARO GARCIA MARISELA, identificado(a) con
+        <p style="margin-top: 3em"> Certificamos que {{$credit->debtor->name}}, identificado(a) con
             Cédula de Ciudadanía No. {{$credit->debtor->document_number}} a la fecha presenta el siguiente Saldo
             por recaudar de sus créditos actuales así:</p>
     </div>
