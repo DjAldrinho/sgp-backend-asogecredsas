@@ -97,7 +97,7 @@ class AccountController extends Controller
 
             return response()->json(['message' => ucfirst($request->type) . ' generado!', 'account' => $account], 200);
         } catch (\Exception $exception) {
-            return response()->json(['message' => $exception->getMessage()], 409);
+            return response()->json(['message' => $exception->getMessage(), 'line' => $exception->getLine()], 409);
         }
     }
 
