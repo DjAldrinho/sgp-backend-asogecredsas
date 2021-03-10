@@ -14,7 +14,7 @@ class SupplierController extends Controller
 
         $per_page = isset($request->per_page) ? $request->per_page : 50;
 
-        $suppliers = Supplier::paginate($per_page);
+        $suppliers = Supplier::byName($request->search)->paginate($per_page);
 
         $suppliers->appends(['per_page' => $per_page]);
 

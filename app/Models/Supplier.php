@@ -28,4 +28,11 @@ class Supplier extends Model
     {
         $this->attributes['old_value'] = $this->value;
     }
+
+    public function scopeByName($query, $value)
+    {
+        if ($value) {
+            return $query->Where('name', 'ilike', '%' . $value . '%');
+        }
+    }
 }
