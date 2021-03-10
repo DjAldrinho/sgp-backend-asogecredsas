@@ -26,8 +26,6 @@ class CreditExportsPDF
     private function operation($request)
     {
         $credits = $this->creditService->getCredits($request)->get();
-        dd($credits);
-
 
         $pdf = \PDF::loadView('pdf.credits', [
             'credits' => $credits,
