@@ -80,13 +80,18 @@ class AccountController extends Controller
             $account = Account::firstWhere(['id' => $request->account_id]);
 
             if ($request->type === 'retire') {
-                if ($amount > $amount->value) {
+                if ($amount > $account->value) {
                     return response()->json(['message' => 'No tiene saldo en la cuenta #' . $account->id . ' - ' . $account->name], Response::HTTP_BAD_REQUEST);
                 }
+
                 $amount = -abs($amount);
+
+                AccountService::updateAccount($account, $amount, 'retire');
+            } else {
+                AccountService::updateAccount($account, $amount, 'add');
             }
 
-            AccountService::updateAccount($account, $amount, 'add');
+
             StoreTransaction::dispatchSync($account->id, $request->type, $amount,
                 $request->commentary, $request->supplier_id, $request->type_transaction);
 
