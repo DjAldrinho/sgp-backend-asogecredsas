@@ -90,6 +90,7 @@ class LawyerController extends Controller
             'email' => 'required|string|email|unique:lawyers,email,' . $lawyer->id,
             'phone' => 'required|string',
             'document_number' => 'required|string|unique:lawyers,id,' . $lawyer->id,
+            'professional_card' => 'required|file'
         ]);
 
         try {
@@ -97,6 +98,7 @@ class LawyerController extends Controller
             $lawyer->phone = $request->phone;
             $lawyer->name = $request->name;
             $lawyer->document_number = $request->document_number;
+            $lawyer->professional_card = FileManager::uploadPublicFiles($request->file('professional_card'), 'lawyers');
             $lawyer->save();
             $lawyer->refresh();
             return response()->json(['message' => __('messages.lawyers.updated'), 'lawyer' => $lawyer], 200);
