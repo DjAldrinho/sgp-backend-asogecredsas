@@ -440,6 +440,7 @@ class CreditController extends Controller
     {
         try {
             $document->delete();
+            unlink(public_path('storage/' . $document->document_file));
             return response()->json(['message' => 'Documento eliminado'], 200);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()]);
@@ -458,5 +459,28 @@ class CreditController extends Controller
         } else {
             return response()->json(['message' => 'Solo se puede cancelar creditos pendientes'], Response::HTTP_BAD_REQUEST);
         }
+    }
+
+    public function addDocument(Request $request)
+    {
+        $request->validate([
+            'credit_id' => 'required|integer|exists:credits,id',
+            'files' => 'required',
+            'files.*' => 'mimes:doc,pdf,docx,zip,jpeg,jpg,png,xls,xlsx',
+        ]);
+
+        $credit = Credit::find($request->credit_id);
+
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $key => $file) {
+                $documents[$key] = new CreditDocument(['document_file' => FileManager::uploadPublicFiles($file, 'documents_credits', $key)]);
+            }
+
+            if (count($documents) > 0) {
+                $credit->documents()->saveMany($documents);
+            }
+        }
+
+        return response()->json(['message' => 'Documentos subidos', 'credit' => $credit, 'documents' => $documents], Response::HTTP_OK);
     }
 }
