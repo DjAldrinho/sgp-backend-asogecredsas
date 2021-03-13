@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Transaction;
+use App\Services\AccountService;
 use App\Services\TransactionService;
 use Illuminate\Http\Request;
 
@@ -46,5 +48,27 @@ class TransactionController extends Controller
         $transactions->appends(['per_page' => $per_page]);
 
         return response()->json(['transactions' => $transactions, 'count' => $count], 200);
+    }
+
+    public function delete(Transaction $transaction)
+    {
+        try {
+            if ($transaction->value) {
+                if (!in_array($transaction->origin, ['credit', 'process_payment', 'commission'])) {
+                    $value = $transaction->value < 0 ? abs($transaction->value) : $transaction->value;
+                    $type = $transaction->origin == 'retire' ? 'add' : 'sub';
+                    AccountService::updateAccount($transaction->account, $value, $type);
+                    if ($transaction->origin == 'credit_payment') {
+                        $credit = $transaction->credit;
+                        $credit->payment += $value;
+                        $credit->save();
+                    }
+                    $transaction->delete();
+                    return response()->json(['message' => 'Transaccion eliminada correctamente!'], 200);
+                }
+            }
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 409);
+        }
     }
 }

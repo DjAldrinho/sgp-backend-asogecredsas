@@ -81,8 +81,9 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('delete/{account}', [AccountController::class, 'destroy']);
     });
 
-    Route::group(['prefix' => 'transactions'], function () {
+    Route::group(['prefix' => 'transactions', 'middleware' => 'validate_admin'], function () {
         Route::get('all', [TransactionController::class, 'index']);
+        Route::delete('delete/{transaction}', [TransactionController::class, 'delete']);
     });
 
     Route::group(['prefix' => 'dashboard'], function () {
