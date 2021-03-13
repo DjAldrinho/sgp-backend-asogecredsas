@@ -42,12 +42,9 @@ class TransactionController extends Controller
 
         $transactions = $this->service->getTransactions($request)->paginate($per_page);
 
-
-        $count = $request->page ? ($request->page * $per_page) - $per_page : 0;
-
         $transactions->appends(['per_page' => $per_page]);
 
-        return response()->json(['transactions' => $transactions, 'count' => $count], 200);
+        return response()->json(['transactions' => $transactions], 200);
     }
 
     public function delete(Transaction $transaction)
