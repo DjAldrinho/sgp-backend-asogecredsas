@@ -18,7 +18,7 @@ class UserAdminSeeder extends Seeder
     {
 
         $users = [
-            ['name' => 'Alex Galeano', 'email' => 'alexhgaleanoc@gmail.com', 'document_number' => 1234567891],
+            ['name' => 'Alex Galeano', 'email' => 'admin@gmail.com', 'document_number' => 1234567891],
         ];
 
         foreach ($users as $key => $user) {
@@ -28,7 +28,7 @@ class UserAdminSeeder extends Seeder
                 'email_verified_at' => now(),
                 'document_type' => 'cc',
                 'document_number' => $user["document_number"],
-                'password' => bcrypt('Adm!n'),
+                'password' => bcrypt('password'),
                 'remember_token' => Str::random(10),
                 'is_administrator' => true
             ]);
