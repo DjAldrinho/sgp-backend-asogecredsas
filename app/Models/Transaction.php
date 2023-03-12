@@ -21,7 +21,8 @@ class Transaction extends Model
         'user_id',
         'commentary',
         'credit_id',
-        'process_id'
+        'process_id',
+        'transaction_date'
     ];
 
     public function account()

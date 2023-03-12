@@ -177,7 +177,8 @@ class CreditController extends Controller
     {
         $request->validate([
             'credit_id' => 'required|integer|exists:credits,id',
-            'value' => 'required|numeric'
+            'value' => 'required|numeric',
+            'deposit_date' => 'date'
         ]);
 
         try {
@@ -196,7 +197,7 @@ class CreditController extends Controller
 
                     AccountService::updateAccount($credit->account, $request->value, 'add');
                     StoreTransaction::dispatchSync($credit->account->id, 'credit_payment', $request->value,
-                        'Abono de credito #' . $credit->code, 3, 4, $credit->id);
+                        'Abono de credito #' . $credit->code, 3, 4, $credit->id, null, $request->deposit_date);
 
 
                     $payment = number_format(($credit->payment), 2, '.', ',');
