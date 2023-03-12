@@ -50,18 +50,18 @@
 <body>
 <div>
     <div id="watermark">
-        <img src="{{public_path('pdf/logo.jpg')}}" height="100%" width="100%"/>
+        <img src="{{public_path('pdf/logo-fondo.jpg')}}" height="100%" width="100%" style="opacity: 0.2"/>
     </div>
     <div style="text-align: right">
-        <img src="{{public_path('pdf/logo2.png')}}" style="width: 200px">
+        <img src="{{public_path('pdf/logo-asogecred.png')}}" style="width: 200px">
     </div>
     <div style="margin-top: 2em">
         <p>Cartagena, {{\Carbon\Carbon::now()->format('d \\d\\e M \\d\\e Y')}}</p>
     </div>
     <div style="margin-top: 0.50em">
         <h2 style="text-align: center;margin-top: 2em;font-weight: bold">A QUIEN INTERESE</h2>
-        <p style="margin-top: 3em"> Certificamos que {{$credit->debtor->name}}, identificado(a) con
-            Cédula de Ciudadanía No. {{$credit->debtor->document_number}} a la fecha presenta el siguiente Saldo
+        <p style="margin-top: 3em"> Certificamos que <b>{{$credit->debtor->name}}</b>, identificado(a) con
+            Cédula de Ciudadanía No. <b>{{$credit->debtor->document_number}}</b> a la fecha presenta el siguiente Saldo
             por recaudar de sus créditos actuales así:</p>
     </div>
     <div style="margin-top: 0.50em;text-align: center">
@@ -87,24 +87,26 @@
             Validez: {{\Carbon\Carbon::now()->format('d \\d\\e M \\d\\e Y')}}
         </p>
         <p>
-            <b>Nota: </b>El pago de este saldo debe ser cancelado mediante CONSIGNACIÓN en la cuenta de Ahorros No.:
-            085-000003-51 de BANCOLOMBIA a nombre de INVERSIONES EN FAMILIA
-            SAS NIT.: 901211975, luego de consignado por favor notificar el pago al correo
-            Valoresenfamiliacorreo@gmail.com
+            <b>Nota: </b>El pago de este saldo debe ser cancelado mediante CONSIGNACIÓN en la cuenta de
+            Ahorros No.: 678-000102-29 de BANCOLOMBIA a nombre de <b>ASOGECRED SAS</b>
+            NIT: 901628394-1, luego de consignado por favor notificar el pago al correo
+            <b>asogecred@gmail.com</b>.
         </p>
-        <div style="width: 200px;text-align: left;">
+        <div style="width: 250px;text-align: left;">
             <div style="border-bottom: 2px solid black">
                 <img src="{{public_path('pdf/Firma.png')}}" style="width: 100px">
             </div>
             <br>
             <b>YULIANA GUARDO JIMENEZ <br>
-                JEFE DE CARTERA</b>
+                JEFE DE CARTERA
+            </b>
         </div>
         <div style="margin-top: 2em">
             <p style="text-align: center">
-                CENTRO EDIFICIO BOMBAY 3 PISO OFICINA 305 <br>
-                Tels.: 3205140197-6653788 <br>
-                Valoresenfamiliacorreo@gmail.com <br>
+                BRR LA CAROLINA CRR 91 TRANVS 54-120 <br>
+                Tels.: 3157673739-3013159380 <br>
+                asogecred@gmail.com
+                <br>
                 CARTAGENA-BOLIVAR
             </p>
         </div>
